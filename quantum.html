@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量子力学解答 | PhysicsSolution Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --quantum-purple: #6f42c1;
+            --quantum-pink: #d63384;
+            --dev-mode-green: #28a745;
+            --physics-blue: #2b5fdc;
+        }
+        .quantum-header {
+            background: linear-gradient(135deg, #6f42c1 0%, #3a1c71 100%);
+            color: white;
+        }
+        .chapter-card {
+            border-left: 4px solid var(--quantum-purple);
+            transition: all 0.3s;
+        }
+        .chapter-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(111, 66, 193, 0.1);
+        }
+        .solution-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .problem-title {
+            color: var(--quantum-purple);
+            border-bottom: 2px solid var(--quantum-purple);
+            padding-bottom: 8px;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--quantum-purple);
+        }
+        .nav-pills .nav-link {
+            color: var(--quantum-purple);
+        }
+        .dev-mode-active {
+            box-shadow: 0 0 0 3px var(--dev-mode-green);
+        }
+        #devModePanel {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 350px;
+            background: white;
+            border: 1px solid #ddd;
+            z-index: 1000;
+            display: none;
+        }
+        .formula-editor {
+            font-family: monospace;
+            min-height: 100px;
+            width: 100%;
+        }
+        .preview-area {
+            min-height: 50px;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            margin-top: 10px;
+        }
+        .book-cover {
+            max-height: 250px;
+            width: auto;
+            object-fit: contain;
+            padding: 15px;
+            background: #fff;
+        }
+        .resource-item {
+            border-left: 3px solid var(--physics-blue);
+            padding: 10px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        .resource-item:hover {
+            background-color: #f8f9fa;
+        }
+        .resource-item a {
+            color: #333;
+            text-decoration: none;
+        }
+        .resource-item a:hover {
+            color: var(--physics-blue);
+        }
+        @media (max-width: 768px) {
+            .book-cover {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-atom me-2"></i>PhysicsSolution Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="quantum.html"><i class="fas fa-quantum me-1"></i> 量子力学</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div id="authButtons">
+                        <a href="login.html" class="btn btn-outline-primary me-2">登录</a>
+                        <a href="login.html#register" class="btn btn-primary">注册</a>
+                    </div>
+                    <div id="userMenu" style="display: none;">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle me-2" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-1"></i> <span id="usernameDisplay"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="quantum.html"><i class="fas fa-code me-1"></i> 开发者模式</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i> 退出登录</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button id="devModeToggle" class="btn btn-sm btn-success me-2">
+                        <i class="fas fa-code me-1"></i> 开发者模式
+                    </button>
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="搜索量子力学问题...">
+                        <button class="btn btn-outline-primary" type="submit">搜索</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 量子力学页头 -->
+    <header class="quantum-header py-5 mb-5">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold">
+                <i class="fas fa-quantum me-2"></i>量子力学解答库
+            </h1>
+            <p class="lead mb-0">涵盖波函数、薛定谔方程、算符理论等核心内容</p>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container">
+        <div class="row">
+            <!-- 左侧导航 -->
+            <div class="col-lg-3 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-list-ul me-2"></i>章节导航</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="#chapter1" class="list-group-item list-group-item-action active">1. 量子力学基础</a>
+                        <a href="#chapter2" class="list-group-item list-group-item-action">2. 薛定谔方程</a>
+                        <a href="#chapter3" class="list-group-item list-group-item-action">3. 算符理论</a>
+                        <a href="#chapter4" class="list-group-item list-group-item-action">4. 角动量</a>
+                        <a href="#chapter5" class="list-group-item list-group-item-action">5. 微扰理论</a>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-book me-2"></i>推荐教材</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <img src="quantum.jpeg" alt="量子力学教材" class="img-fluid book-cover mb-3">
+                        <h6>量子力学导论</h6>
+                        <p class="text-muted small">David J. Griffiths</p>
+                    </div>
+                </div>
+
+                <!-- 新增的资料库部分 -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-file-pdf me-2"></i>资料库</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/量子力学 曾谨言 卷一.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>《量子力学》 曾谨言 卷一</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">经典量子力学教材</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/量子力学 曾谨言 卷二.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>《量子力学》 曾谨言 卷二</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">经典量子力学教材</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/伯克利物理学教程_第4卷_量子力学.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>伯克利物理学教程_第4卷_量子力学</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">海外教材精选</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/10-量子力学习题.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>量子力学习题</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">理论推导与实例分析</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/量子力学I by [德] 顾樵(Qiao GU) (z-lib.org).pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>量子力学I</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">顾樵</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/量子力学II by [德] 顾樵(Qiao GU) (z-lib.org).pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>量子力学II</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">顾樵</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/量子力学-[美]E.Fermi.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>量子力学</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">费米经典教材</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/简明量子力学.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>简明量子力学</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">新手入门教程</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/量子力学-钱伯初-高等教育出版社-2005.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>量子力学</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">钱伯初</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/量子力学概论.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>量子力学概论</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">格里菲斯翻译版</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="../物理系教材解答网站尝试/source/quantum/量子力学-苏汝铿-高等教育出版社-1997.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>量子力学</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">量子力学-苏汝铿-高等教育出版社-1997</small>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                                <i class="fas fa-upload me-1"></i>上传资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-filter me-2"></i>筛选</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">难度</label>
+                            <select class="form-select">
+                                <option>全部</option>
+                                <option>基础</option>
+                                <option>中等</option>
+                                <option>高级</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">教材</label>
+                            <select class="form-select">
+                                <option>全部</option>
+                                <option>Griffiths</option>
+                                <option>Zettili</option>
+                                <option>曾谨言</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-outline-primary w-100">应用筛选</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧内容 -->
+            <div class="col-lg-9">
+                <!-- 第一章：量子力学基础 -->
+                <div class="mb-5" id="chapter1">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h3 mb-0">
+                            <i class="fas fa-atom text-purple me-2"></i>第一章：量子力学基础
+                        </h2>
+                        <span class="badge rounded-pill" style="background-color: var(--quantum-purple);">25题</span>
+                    </div>
+
+                    <!-- 问题1.1 -->
+                    <div class="card solution-box mb-4">
+                        <div class="card-body">
+                            <h4 class="problem-title mb-4">问题1.1 - 波函数归一化</h4>
+                            
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-question-circle me-2"></i>题目描述</h5>
+                                <p>给定波函数 \(\psi(x) = A e^{-x^2/2a^2}\)，其中 \(a\) 为实常数，求归一化常数 \(A\)。</p>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-book me-2"></i>来源: Zettili《量子力学概念与应用》第一章习题3
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-lightbulb me-2"></i>解答</h5>
+                                <div class="solution-step">
+                                    <p>归一化条件要求：</p>
+                                    <p>\[
+                                    \int_{-\infty}^{\infty} |\psi(x)|^2 dx = 1
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>代入波函数表达式：</p>
+                                    <p>\[
+                                    |A|^2 \int_{-\infty}^{\infty} e^{-x^2/a^2} dx = 1
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>利用高斯积分公式：</p>
+                                    <p>\[
+                                    \int_{-\infty}^{\infty} e^{-x^2/a^2} dx = a\sqrt{\pi}
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>因此归一化常数为：</p>
+                                    <p>\[
+                                    A = \frac{1}{(a^2\pi)^{1/4}}
+                                    \]</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 问题1.2 -->
+                    <div class="card solution-box mb-4">
+                        <div class="card-body">
+                            <h4 class="problem-title mb-4">问题1.2 - 概率流密度</h4>
+                            
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-question-circle me-2"></i>题目描述</h5>
+                                <p>证明对于任意波函数 \(\psi(\mathbf{r},t)\)，概率流密度可以表示为：</p>
+                                <p>\[
+                                \mathbf{j} = \frac{\hbar}{2mi}(\psi^* \nabla \psi - \psi \nabla \psi^*)
+                                \]</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-lightbulb me-2"></i>解答</h5>
+                                <div class="solution-step">
+                                    <p>从概率守恒的连续性方程出发：</p>
+                                    <p>\[
+                                    \frac{\partial \rho}{\partial t} + \nabla \cdot \mathbf{j} = 0
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>其中 \(\rho = |\psi|^2\) 是概率密度。根据薛定谔方程：</p>
+                                    <p>\[
+                                    i\hbar \frac{\partial \psi}{\partial t} = -\frac{\hbar^2}{2m}\nabla^2\psi + V\psi
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>及其复共轭方程，可以推导出...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第二章：薛定谔方程 -->
+                <div class="mb-5" id="chapter2">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h3 mb-0">
+                            <i class="fas fa-wave-square text-purple me-2"></i>第二章：薛定谔方程
+                        </h2>
+                        <span class="badge rounded-pill" style="background-color: var(--quantum-purple);">18题</span>
+                    </div>
+
+                    <!-- 问题2.1 -->
+                    <div class="card solution-box mb-4">
+                        <div class="card-body">
+                            <h4 class="problem-title mb-4">问题2.1 - 一维无限深势阱</h4>
+                            
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-question-circle me-2"></i>题目描述</h5>
+                                <p>考虑宽度为 \(a\) 的一维无限深势阱，势能函数为：</p>
+                                <p>\[
+                                V(x) = \begin{cases} 
+                                0 & \text{当 } 0 < x < a \\
+                                \infty & \text{其他情况}
+                                \end{cases}
+                                \]</p>
+                                <p>求系统的能级和对应的归一化波函数。</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-lightbulb me-2"></i>解答</h5>
+                                <div class="solution-step">
+                                    <p>在势阱内部 (\(0 < x < a\))，薛定谔方程为：</p>
+                                    <p>\[
+                                    -\frac{\hbar^2}{2m}\frac{d^2\psi}{dx^2} = E\psi
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>通解为：</p>
+                                    <p>\[
+                                    \psi(x) = A\sin(kx) + B\cos(kx), \quad k = \sqrt{\frac{2mE}{\hbar^2}}
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>由边界条件 \(\psi(0) = \psi(a) = 0\) 可得...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第三章：算符理论 -->
+                <div class="mb-5" id="chapter3">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h3 mb-0">
+                            <i class="fas fa-calculator text-purple me-2"></i>第三章：算符理论
+                        </h2>
+                        <span class="badge rounded-pill" style="background-color: var(--quantum-purple);">22题</span>
+                    </div>
+
+                    <!-- 问题3.1 -->
+                    <div class="card solution-box mb-4">
+                        <div class="card-body">
+                            <h4 class="problem-title mb-4">问题3.1 - 对易关系</h4>
+                            
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-question-circle me-2"></i>题目描述</h5>
+                                <p>证明位置算符 \(\hat{x}\) 和动量算符 \(\hat{p}_x\) 的对易关系：</p>
+                                <p>\[
+                                [\hat{x}, \hat{p}_x] = i\hbar
+                                \]</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-lightbulb me-2"></i>解答</h5>
+                                <div class="solution-step">
+                                    <p>根据算符定义，对任意波函数 \(\psi(x)\)：</p>
+                                    <p>\[
+                                    [\hat{x}, \hat{p}_x]\psi = \hat{x}\hat{p}_x\psi - \hat{p}_x\hat{x}\psi
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>代入 \(\hat{p}_x = -i\hbar \frac{\partial}{\partial x}\)：</p>
+                                    <p>\[
+                                    = -i\hbar x \frac{\partial \psi}{\partial x} + i\hbar \frac{\partial}{\partial x}(x\psi)
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>展开第二项：</p>
+                                    <p>\[
+                                    = -i\hbar x \frac{\partial \psi}{\partial x} + i\hbar \psi + i\hbar x \frac{\partial \psi}{\partial x} = i\hbar \psi
+                                    \]</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第四章：角动量 -->
+                <div class="mb-5" id="chapter4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h3 mb-0">
+                            <i class="fas fa-circle-notch text-purple me-2"></i>第四章：角动量
+                        </h2>
+                        <span class="badge rounded-pill" style="background-color: var(--quantum-purple);">15题</span>
+                    </div>
+
+                    <!-- 问题4.1 -->
+                    <div class="card solution-box mb-4">
+                        <div class="card-body">
+                            <h4 class="problem-title mb-4">问题4.1 - 角动量算符</h4>
+                            
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-question-circle me-2"></i>题目描述</h5>
+                                <p>证明角动量算符 \(\hat{L}_x\), \(\hat{L}_y\), \(\hat{L}_z\) 满足以下对易关系：</p>
+                                <p>\[
+                                [\hat{L}_x, \hat{L}_y] = i\hbar \hat{L}_z
+                                \]</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-lightbulb me-2"></i>解答</h5>
+                                <div class="solution-step">
+                                    <p>角动量算符在笛卡尔坐标系中的表达式为：</p>
+                                    <p>\[
+                                    \hat{L}_x = \hat{y}\hat{p}_z - \hat{z}\hat{p}_y
+                                    \]</p>
+                                    <p>\[
+                                    \hat{L}_y = \hat{z}\hat{p}_x - \hat{x}\hat{p}_z
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>计算对易关系：</p>
+                                    <p>\[
+                                    [\hat{L}_x, \hat{L}_y] = [\hat{y}\hat{p}_z - \hat{z}\hat{p}_y, \hat{z}\hat{p}_x - \hat{x}\hat{p}_z]
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>展开后利用基本对易关系可得...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第五章：微扰理论 -->
+                <div class="mb-5" id="chapter5">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h3 mb-0">
+                            <i class="fas fa-project-diagram text-purple me-2"></i>第五章：微扰理论
+                        </h2>
+                        <span class="badge rounded-pill" style="background-color: var(--quantum-purple);">12题</span>
+                    </div>
+
+                    <!-- 问题5.1 -->
+                    <div class="card solution-box mb-4">
+                        <div class="card-body">
+                            <h4 class="problem-title mb-4">问题5.1 - 非简并微扰</h4>
+                            
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-question-circle me-2"></i>题目描述</h5>
+                                <p>考虑一维谐振子受到微扰 \(H' = \lambda x^4\)，计算基态能量的一阶修正。</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-lightbulb me-2"></i>解答</h5>
+                                <div class="solution-step">
+                                    <p>一阶能量修正为：</p>
+                                    <p>\[
+                                    E_0^{(1)} = \langle 0|H'|0\rangle = \lambda \langle 0|x^4|0\rangle
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>利用谐振子的基态波函数：</p>
+                                    <p>\[
+                                    \psi_0(x) = \left(\frac{m\omega}{\pi\hbar}\right)^{1/4} e^{-m\omega x^2/2\hbar}
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p>计算积分 \(\langle 0|x^4|0\rangle\) 可得...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 上传资料的模态框 -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">上传PDF资料</h5>
+                    <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#uploadModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="uploadForm">
+                        <div class="mb-3">
+                            <label for="resourceName" class="form-label">资料名称</label>
+                            <input type="text" class="form-control" id="resourceName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="resourceFile" class="form-label">选择PDF文件</label>
+                            <input type="file" class="form-control" id="resourceFile" accept=".pdf" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="resourceDescription" class="form-label">简要描述</label>
+                            <textarea class="form-control" id="resourceDescription" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="submitUpload">上传</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 开发者模式面板 -->
+    <div id="devModePanel" class="p-3 shadow-lg">
+        <h5><i class="fas fa-code me-2"></i>开发者模式</h5>
+        <div class="mb-3">
+            <label class="form-label">LaTeX公式编辑</label>
+            <textarea id="formulaEditor" class="formula-editor form-control" placeholder="输入LaTeX公式，例如: \int_{-\infty}^\infty e^{-x^2}dx = \sqrt{\pi}"></textarea>
+            <button id="renderFormula" class="btn btn-sm btn-success mt-2">
+                <i class="fas fa-sync-alt me-1"></i> 渲染公式
+            </button>
+            <div class="preview-area" id="formulaPreview">
+                预览将显示在这里...
+            </div>
+        </div>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="editModeToggle">
+            <label class="form-check-label" for="editModeToggle">启用公式编辑模式</label>
+        </div>
+        <button id="closeDevPanel" class="btn btn-sm btn-danger mt-3">
+            <i class="fas fa-times me-1"></i> 关闭面板
+        </button>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="py-5 text-white" style="background: linear-gradient(135deg, #6f42c1 0%, #3a1c71 100%);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5><i class="fas fa-atom me-2"></i>PhysicsSolution Hub</h5>
+                    <p class="mt-3">专业量子力学学习资源平台</p>
+                    <a href="index.html" class="btn btn-outline-light mt-2">
+                        <i class="fas fa-arrow-left me-1"></i> 返回首页
+                    </a>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5>快速链接</h5>
+                    <div class="d-flex flex-wrap">
+                        <a href="#chapter1" class="btn btn-sm btn-outline-light m-1">量子力学基础</a>
+                        <a href="#chapter2" class="btn btn-sm btn-outline-light m-1">薛定谔方程</a>
+                        <a href="#chapter3" class="btn btn-sm btn-outline-light m-1">算符理论</a>
+                        <a href="#chapter4" class="btn btn-sm btn-outline-light m-1">角动量</a>
+                        <a href="#chapter5" class="btn btn-sm btn-outline-light m-1">微扰理论</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">© 2023 PhysicsSolution Hub 量子力学分部</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // 检查登录状态并更新UI
+        function updateAuthUI() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+            const authButtons = document.getElementById('authButtons');
+            const userMenu = document.getElementById('userMenu');
+            
+            if(isLoggedIn && username) {
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'block';
+                document.getElementById('usernameDisplay').textContent = username;
+            } else {
+                authButtons.style.display = 'block';
+                userMenu.style.display = 'none';
+            }
+        }
+        
+        // 开发者模式访问控制
+        const checkDevModeAccess = () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+            
+            if(!isLoggedIn || username !== '2150019') {
+                document.getElementById('devModeToggle').style.display = 'none';
+                return false;
+            }
+            return true;
+        };
+
+        // 开发者模式功能
+        const devModeToggle = document.getElementById('devModeToggle');
+        const devModePanel = document.getElementById('devModePanel');
+        const closeDevPanel = document.getElementById('closeDevPanel');
+        const editModeToggle = document.getElementById('editModeToggle');
+        const formulaEditor = document.getElementById('formulaEditor');
+        const renderFormula = document.getElementById('renderFormula');
+        const formulaPreview = document.getElementById('formulaPreview');
+
+        // 切换开发者面板
+        devModeToggle.addEventListener('click', () => {
+            if(!checkDevModeAccess()) {
+                alert('只有特定账号才能访问开发者模式！');
+                window.location.href = 'login.html';
+                return;
+            }
+            devModePanel.style.display = devModePanel.style.display === 'block' ? 'none' : 'block';
+        });
+
+        closeDevPanel.addEventListener('click', () => {
+            devModePanel.style.display = 'none';
+        });
+
+        // 渲染LaTeX公式
+        renderFormula.addEventListener('click', () => {
+            const latexCode = formulaEditor.value;
+            formulaPreview.innerHTML = `$$${latexCode}$$`;
+            MathJax.typesetPromise([formulaPreview]).catch(err => {
+                formulaPreview.innerHTML = `渲染错误: ${err.message}`;
+            });
+        });
+
+        // 编辑模式切换
+        editModeToggle.addEventListener('change', function() {
+            const formulaElements = document.querySelectorAll('.solution-box [class^="MathJax"], .solution-box .mjx-chtml');
+            if (this.checked) {
+                document.body.classList.add('dev-mode-active');
+                formulaElements.forEach(el => {
+                    el.style.cursor = 'pointer';
+                    el.title = '点击编辑公式';
+                    el.addEventListener('click', handleFormulaClick);
+                });
+            } else {
+                document.body.classList.remove('dev-mode-active');
+                formulaElements.forEach(el => {
+                    el.style.cursor = '';
+                    el.title = '';
+                    el.removeEventListener('click', handleFormulaClick);
+                });
+            }
+        });
+
+        // 处理公式点击编辑
+        function handleFormulaClick(e) {
+            const mathjaxElement = e.target.closest('.MathJax, .mjx-chtml');
+            const latexSource = mathjaxElement.getAttribute('data-original-text') || 
+                              mathjaxElement.querySelector('annotation')?.textContent.replace(/^\$\$(.*)\$\$$/, '$1');
+            
+            if (latexSource) {
+                devModePanel.style.display = 'block';
+                formulaEditor.value = latexSource;
+                formulaPreview.innerHTML = `$$${latexSource}$$`;
+                MathJax.typesetPromise([formulaPreview]);
+                
+                // 滚动到编辑器
+                devModePanel.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // 退出登录功能
+        document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = 'index.html';
+        });
+        
+        // 上传功能示例
+        document.getElementById('submitUpload')?.addEventListener('click', function() {
+            const resourceName = document.getElementById('resourceName').value;
+            const fileInput = document.getElementById('resourceFile');
+            
+            if(resourceName && fileInput.files.length > 0) {
+                alert(`文件 ${fileInput.files[0].name} 上传成功！`);
+                // 实际应用中这里应该有AJAX上传逻辑
+                var bootstrapModal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+                bootstrapModal.hide();
+            } else {
+                alert('请填写完整信息并选择文件！');
+            }
+        });
+
+        // 章节导航滚动效果
+        document.querySelectorAll('.list-group-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // 更新活跃状态
+                document.querySelectorAll('.list-group-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // 初始化MathJax配置
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+                ignoreHtmlClass: 'tex2jax_ignore'
+            }
+        };
+
+        // 页面加载时更新UI
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthUI();
+        });
+    </script>
+</body>
+</html>

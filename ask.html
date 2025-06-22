@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提问 | PhysicsSolution Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --physics-blue: #2b5fdc;
+            --physics-green: #28a745;
+            --physics-purple: #6f42c1;
+            --physics-orange: #fd7e14;
+        }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .ask-header {
+            background: linear-gradient(135deg, var(--physics-blue) 0%, #1a3a8f 100%);
+            color: white;
+        }
+        .subject-badge {
+            background-color: var(--physics-purple);
+        }
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .tag {
+            background-color: #e9ecef;
+            border-radius: 20px;
+            padding: 2px 10px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .tag-remove {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-atom me-2"></i>PhysicsSolution Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-book me-1"></i> 教材库</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="community.html"><i class="fas fa-question-circle me-1"></i> 问答社区</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-vial me-1"></i> 虚拟实验</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="login.html" class="btn btn-outline-primary me-2">登录</a>
+                    <a href="login.html#register" class="btn btn-primary">注册</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页头 -->
+    <header class="ask-header py-4 mb-4">
+        <div class="container text-center">
+            <h1 class="display-6 fw-bold">
+                <i class="fas fa-question-circle me-2"></i>提出问题
+            </h1>
+            <p class="lead mb-0">详细描述您的问题，获得更准确的解答</p>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="form-container p-4">
+                    <form>
+                        <!-- 问题标题 -->
+                        <div class="mb-4">
+                            <label for="questionTitle" class="form-label">问题标题</label>
+                            <input type="text" class="form-control" id="questionTitle" placeholder="简明扼要地描述您的问题">
+                            <small class="text-muted">例如：如何理解量子力学中的自旋概念？</small>
+                        </div>
+
+                        <!-- 问题分类 -->
+                        <div class="mb-4">
+                            <label class="form-label">问题分类</label>
+                            <select class="form-select">
+                                <option selected>选择学科分类</option>
+                                <option>量子力学</option>
+                                <option>电动力学</option>
+                                <option>统计力学</option>
+                                <option>广义相对论</option>
+                                <option>经典力学</option>
+                                <option>热力学</option>
+                            </select>
+                        </div>
+
+                        <!-- 问题描述 -->
+                        <div class="mb-4">
+                            <label for="questionContent" class="form-label">问题描述</label>
+                            <textarea class="form-control" id="questionContent" rows="8" placeholder="详细描述您的问题，包括：
+- 您已经了解的内容
+- 具体困惑的地方
+- 尝试过的解决方法"></textarea>
+                            <small class="text-muted">可以使用Markdown格式和LaTeX公式</small>
+                        </div>
+
+                        <!-- 标签 -->
+                        <div class="mb-4">
+                            <label class="form-label">问题标签</label>
+                            <div class="d-flex mb-2">
+                                <input type="text" class="form-control me-2" id="tagInput" placeholder="添加标签（如：自旋、波函数、薛定谔方程）">
+                                <button type="button" class="btn btn-outline-secondary" id="addTagBtn">添加</button>
+                            </div>
+                            <div id="tagsContainer">
+                                <!-- 标签将在这里动态添加 -->
+                            </div>
+                            <small class="text-muted">添加相关标签有助于问题被更快解答</small>
+                        </div>
+
+                        <!-- 提交按钮 -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary py-2">提交问题</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 提问指南 -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-lightbulb me-2"></i>如何提出好问题？</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>标题明确</strong> - 简明扼要概括问题核心</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>描述详细</strong> - 包括背景信息、具体困惑和尝试过的解决方法</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>分类准确</strong> - 选择正确的学科分类有助于专家看到您的问题</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>添加标签</strong> - 使用相关标签提高问题曝光度</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>检查重复</strong> - 提问前先搜索是否已有类似问题</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5><i class="fas fa-atom me-2"></i>PhysicsSolution Hub</h5>
+                    <p class="mt-3">专业物理学习资源平台</p>
+                    <a href="index.html" class="btn btn-outline-light mt-2">
+                        <i class="fas fa-arrow-left me-1"></i> 返回首页
+                    </a>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5>快速链接</h5>
+                    <div class="d-flex flex-wrap">
+                        <a href="community.html" class="btn btn-sm btn-outline-light m-1">问答社区</a>
+                        <a href="quantum.html" class="btn btn-sm btn-outline-light m-1">量子力学</a>
+                        <a href="electrodynamics.html" class="btn btn-sm btn-outline-light m-1">电动力学</a>
+                        <a href="statistical.html" class="btn btn-sm btn-outline-light m-1">统计力学</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">© 2023 PhysicsSolution Hub 问答社区</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 脚本加载 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // 标签功能
+        document.getElementById('addTagBtn').addEventListener('click', function() {
+            const tagInput = document.getElementById('tagInput');
+            const tagText = tagInput.value.trim();
+            
+            if (tagText) {
+                const tagsContainer = document.getElementById('tagsContainer');
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `
+                    ${tagText}
+                    <span class="tag-remove">&times;</span>
+                    <input type="hidden" name="tags[]" value="${tagText}">
+                `;
+                tagsContainer.appendChild(tagElement);
+                tagInput.value = '';
+                
+                // 添加删除标签功能
+                tagElement.querySelector('.tag-remove').addEventListener('click', function() {
+                    tagElement.remove();
+                });
+            }
+        });
+        
+        // 回车添加标签
+        document.getElementById('tagInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('addTagBtn').click();
+            }
+        });
+    </script>
+</body>
+</html>

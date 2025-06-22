@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问题详情 | PhysicsSolution Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --physics-blue: #2b5fdc;
+            --physics-green: #28a745;
+            --physics-purple: #6f42c1;
+            --physics-orange: #fd7e14;
+        }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .question-header {
+            background: linear-gradient(135deg, var(--physics-blue) 0%, #1a3a8f 100%);
+            color: white;
+        }
+        .subject-badge {
+            background-color: var(--physics-purple);
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .vote-btn {
+            min-width: 40px;
+        }
+        .vote-count {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .best-answer {
+            border-left: 3px solid var(--physics-green);
+            background-color: rgba(40, 167, 69, 0.05);
+        }
+        .answer-card {
+            border-left: 3px solid #dee2e6;
+        }
+        .answer-form {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-atom me-2"></i>PhysicsSolution Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-book me-1"></i> 教材库</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="community.html"><i class="fas fa-question-circle me-1"></i> 问答社区</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-vial me-1"></i> 虚拟实验</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="login.html" class="btn btn-outline-primary me-2">登录</a>
+                    <a href="login.html#register" class="btn btn-primary">注册</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区 -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- 左侧内容 -->
+            <div class="col-lg-8">
+                <!-- 问题详情 -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <span class="badge subject-badge me-2">量子力学</span>
+                            <small class="text-muted">提问于3小时前</small>
+                        </div>
+                        <h2 class="mb-3">如何理解量子力学中的自旋概念？</h2>
+                        <div class="d-flex mb-4">
+                            <img src="https://randomuser.me/api/portraits/women/32.jpg" class="user-avatar me-3" alt="提问者头像">
+                            <div>
+                                <h5 class="mb-0">李同学</h5>
+                                <small class="text-muted">同济大学物理系</small>
+                            </div>
+                        </div>
+                        <div class="question-content mb-4">
+                            <p>在学习量子力学时，对自旋这个概念感到困惑。它似乎不像轨道角动量那样有经典的对应物，那么应该如何直观理解自旋呢？</p>
+                            <p>具体来说，我有以下几个问题：</p>
+                            <ol>
+                                <li>自旋是粒子的固有属性，但它是否对应某种实际的"旋转"？</li>
+                                <li>为什么自旋量子数只能是半整数或整数？</li>
+                                <li>在斯特恩-格拉赫实验中，银原子束为什么会分裂成两束？</li>
+                            </ol>
+                            <p>希望能得到详细的解释，最好能用比较直观的方式来理解。谢谢！</p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm vote-btn btn-outline-secondary me-2">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <span class="vote-count me-2">24</span>
+                                <button class="btn btn-sm vote-btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <span class="badge bg-light text-dark me-2"><i class="fas fa-eye me-1"></i> 124</span>
+                                <span class="badge bg-light text-dark"><i class="fas fa-comment me-1"></i> 3个回答</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 回答列表 -->
+                <h3 class="h4 mb-4"><i class="fas fa-comments me-2"></i>3个回答</h3>
+                
+                <!-- 最佳回答 -->
+                <div class="card mb-4 best-answer">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="user-avatar me-3" alt="回答者头像">
+                            <div>
+                                <h5 class="mb-0">张教授</h5>
+                                <small class="text-muted">清华大学物理系 | 量子物理专家</small>
+                            </div>
+                            <span class="badge bg-success ms-auto"><i class="fas fa-check me-1"></i>最佳答案</span>
+                        </div>
+                        <div class="answer-content mb-4">
+                            <p>自旋是量子力学中非常重要的概念，我尝试从几个角度来解释：</p>
+                            
+                            <p><strong>1. 自旋的本质</strong></p>
+                            <p>自旋是基本粒子的内禀属性，虽然名字叫"自旋"，但它并不对应经典物理中的旋转。它是一种纯粹的量子力学概念，没有经典的对应物。数学上，自旋算符满足角动量对易关系：</p>
+                            <p>\[
+                            [S_i, S_j] = i\hbar \epsilon_{ijk} S_k
+                            \]</p>
+                            
+                            <p><strong>2. 自旋量子数</strong></p>
+                            <p>自旋量子数的取值是由群论决定的。旋转对称性的群表示理论告诉我们，角动量量子数只能是半整数或整数。这是量子系统对称性的自然结果。</p>
+                            
+                            <p><strong>3. 斯特恩-格拉赫实验</strong></p>
+                            <p>这个实验证明了空间量子化。银原子有一个未配对电子，自旋为1/2。在非均匀磁场中，自旋向上和向下的电子会受到相反方向的力，因此会分裂成两束。</p>
+                            
+                            <p>直观理解自旋可以想象为粒子具有"内在的角动量"，但这种图像并不完全准确。更准确的理解是自旋代表了粒子在旋转变换下的行为。</p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm vote-btn btn-outline-success me-2">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <span class="vote-count me-2">15</span>
+                                <button class="btn btn-sm vote-btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted">回答于2小时前</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 其他回答 -->
+                <div class="card mb-4 answer-card">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <img src="https://randomuser.me/api/portraits/men/75.jpg" class="user-avatar me-3" alt="回答者头像">
+                            <div>
+                                <h5 class="mb-0">王同学</h5>
+                                <small class="text-muted">北京大学物理系研究生</small>
+                            </div>
+                        </div>
+                        <div class="answer-content mb-4">
+                            <p>补充一点关于自旋的数学描述：</p>
+                            <p>自旋1/2粒子的波函数是二维旋量，可以用泡利矩阵表示自旋算符：</p>
+                            <p>\[
+                            S_x = \frac{\hbar}{2}\begin{pmatrix}0 & 1 \\ 1 & 0\end{pmatrix}, \quad
+                            S_y = \frac{\hbar}{2}\begin{pmatrix}0 & -i \\ i & 0\end{pmatrix}, \quad
+                            S_z = \frac{\hbar}{2}\begin{pmatrix}1 & 0 \\ 0 & -1\end{pmatrix}
+                            \]</p>
+                            <p>这些矩阵满足角动量对易关系，是自旋1/2的表示。</p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm vote-btn btn-outline-secondary me-2">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <span class="vote-count me-2">8</span>
+                                <button class="btn btn-sm vote-btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted">回答于1小时前</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4 answer-card">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="user-avatar me-3" alt="回答者头像">
+                            <div>
+                                <h5 class="mb-0">赵研究员</h5>
+                                <small class="text-muted">中国科学院物理所</small>
+                            </div>
+                        </div>
+                        <div class="answer-content mb-4">
+                            <p>关于自旋的经典对应，虽然不能完全对应，但可以做一个类比：</p>
+                            <p>想象一个带电小球旋转会产生磁矩，类似地，电子的自旋也产生磁矩。这就是为什么自旋会影响粒子在磁场中的行为。</p>
+                            <p>但要注意，这种类比是有限的，因为电子被认为是点粒子，没有内部结构，所以不能真的在旋转。</p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm vote-btn btn-outline-secondary me-2">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <span class="vote-count me-2">5</span>
+                                <button class="btn btn-sm vote-btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted">回答于30分钟前</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 回答表单 -->
+                <div class="answer-form mb-5">
+                    <h3 class="h4 mb-4"><i class="fas fa-edit me-2"></i>撰写回答</h3>
+                    <form>
+                        <div class="mb-3">
+                            <textarea class="form-control" rows="8" placeholder="详细描述您的解答...可以使用LaTeX公式，例如: $E=mc^2$"></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">提交回答</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 右侧边栏 -->
+            <div class="col-lg-4">
+                <!-- 相关问题 -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-link me-2"></i>相关问题</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item px-0">
+                                <a href="#" class="text-decoration-none">轨道角动量和自旋角动量有什么区别？</a>
+                                <small class="text-muted d-block">12个回答</small>
+                            </li>
+                            <li class="list-group-item px-0">
+                                <a href="#" class="text-decoration-none">如何理解泡利不相容原理？</a>
+                                <small class="text-muted d-block">8个回答</small>
+                            </li>
+                            <li class="list-group-item px-0">
+                                <a href="#" class="text-decoration-none">自旋统计定理的物理意义是什么？</a>
+                                <small class="text-muted d-block">5个回答</small>
+                            </li>
+                            <li class="list-group-item px-0">
+                                <a href="#" class="text-decoration-none">量子纠缠与自旋有什么关系？</a>
+                                <small class="text-muted d-block">7个回答</small>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 社区指南 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-info-circle me-2"></i>社区指南</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>提问前请先搜索是否已有类似问题</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>问题描述应尽可能详细具体</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>回答时请提供准确可靠的信息</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>可以使用LaTeX编写数学公式</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>对有帮助的回答请投票支持</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5><i class="fas fa-atom me-2"></i>PhysicsSolution Hub</h5>
+                    <p class="mt-3">专业物理学习资源平台</p>
+                    <a href="index.html" class="btn btn-outline-light mt-2">
+                        <i class="fas fa-arrow-left me-1"></i> 返回首页
+                    </a>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5>快速链接</h5>
+                    <div class="d-flex flex-wrap">
+                        <a href="community.html" class="btn btn-sm btn-outline-light m-1">问答社区</a>
+                        <a href="quantum.html" class="btn btn-sm btn-outline-light m-1">量子力学</a>
+                        <a href="electrodynamics.html" class="btn btn-sm btn-outline-light m-1">电动力学</a>
+                        <a href="statistical.html" class="btn btn-sm btn-outline-light m-1">统计力学</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">© 2023 PhysicsSolution Hub 问答社区</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 脚本加载 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // 投票功能
+        document.querySelectorAll('.vote-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const countElement = this.parentElement.querySelector('.vote-count');
+                let count = parseInt(countElement.textContent);
+                
+                if (this.querySelector('.fa-arrow-up')) {
+                    if (this.classList.contains('btn-outline-success')) {
+                        this.classList.remove('btn-outline-success');
+                        this.classList.add('btn-outline-secondary');
+                        count--;
+                    } else {
+                        this.classList.remove('btn-outline-secondary');
+                        this.classList.add('btn-outline-success');
+                        const downBtn = this.parentElement.querySelector('.fa-arrow-down').parentElement;
+                        downBtn.classList.remove('btn-outline-danger');
+                        downBtn.classList.add('btn-outline-secondary');
+                        count++;
+                    }
+                } else if (this.querySelector('.fa-arrow-down')) {
+                    if (this.classList.contains('btn-outline-danger')) {
+                        this.classList.remove('btn-outline-danger');
+                        this.classList.add('btn-outline-secondary');
+                        count++;
+                    } else {
+                        this.classList.remove('btn-outline-secondary');
+                        this.classList.add('btn-outline-danger');
+                        const upBtn = this.parentElement.querySelector('.fa-arrow-up').parentElement;
+                        upBtn.classList.remove('btn-outline-success');
+                        upBtn.classList.add('btn-outline-secondary');
+                        count--;
+                    }
+                }
+                
+                countElement.textContent = count;
+            });
+        });
+    </script>
+</body>
+</html>

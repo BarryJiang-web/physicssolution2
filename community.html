@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问答社区 | PhysicsSolution Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --physics-blue: #2b5fdc;
+            --physics-red: #d62d20;
+            --physics-green: #28a745;
+            --physics-purple: #6f42c1;
+            --physics-orange: #fd7e14;
+        }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .community-header {
+            background: linear-gradient(135deg, var(--physics-blue) 0%, #1a3a8f 100%);
+            color: white;
+        }
+        .question-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid var(--physics-blue);
+        }
+        .question-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .subject-badge {
+            background-color: var(--physics-red);
+        }
+        .quantum-badge {
+            background-color: var(--physics-purple);
+        }
+        .electro-badge {
+            background-color: var(--physics-blue);
+        }
+        .statistical-badge {
+            background-color: var(--physics-orange);
+        }
+        .relativity-badge {
+            background-color: #6c757d;
+        }
+        .answer-card {
+            border-left: 3px solid #6c757d;
+        }
+        .best-answer {
+            border-left: 3px solid var(--physics-green);
+            background-color: rgba(40, 167, 69, 0.05);
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .vote-btn {
+            min-width: 40px;
+        }
+        .vote-count {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .tab-content {
+            padding: 20px 0;
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--physics-blue);
+            font-weight: bold;
+            border-bottom: 3px solid var(--physics-blue);
+        }
+        .nav-tabs .nav-link {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-atom me-2"></i>PhysicsSolution Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-book me-1"></i> 教材库</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="community.html"><i class="fas fa-question-circle me-1"></i> 问答社区</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-vial me-1"></i> 虚拟实验</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="login.html" class="btn btn-outline-primary me-2">登录</a>
+                    <a href="login.html#register" class="btn btn-primary">注册</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页头 -->
+    <header class="community-header py-5 mb-4">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold">
+                <i class="fas fa-question-circle me-2"></i>物理问答社区
+            </h1>
+            <p class="lead mb-0">与物理爱好者一起讨论问题、分享知识</p>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container mb-5">
+        <div class="row">
+            <!-- 左侧内容 -->
+            <div class="col-lg-8">
+                <!-- 提问按钮 -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h4 mb-0">最新问题</h2>
+                    <a href="ask.html" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> 提问
+                    </a>
+                </div>
+
+                <!-- 问题列表 -->
+                <div class="card question-card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <span class="badge quantum-badge me-2">量子力学</span>
+                            <small class="text-muted">提问于3小时前</small>
+                        </div>
+                        <h4 class="card-title">如何理解量子力学中的自旋概念？</h4>
+                        <p class="card-text">在学习量子力学时，对自旋这个概念感到困惑。它似乎不像轨道角动量那样有经典的对应物，那么应该如何直观理解自旋呢？</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-light text-dark me-2"><i class="fas fa-eye me-1"></i> 124</span>
+                                <span class="badge bg-light text-dark me-2"><i class="fas fa-comment me-1"></i> 8</span>
+                                <span class="badge bg-light text-dark"><i class="fas fa-check-circle me-1"></i> 已解决</span>
+                            </div>
+                            <a href="question-detail.html" class="btn btn-sm btn-outline-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card question-card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <span class="badge electro-badge me-2">电动力学</span>
+                            <small class="text-muted">提问于5小时前</small>
+                        </div>
+                        <h4 class="card-title">导体球在均匀电场中的极化现象如何计算？</h4>
+                        <p class="card-text">在学习Griffiths第四章时遇到这个问题，导体球在均匀外场中会产生感应偶极矩，但具体计算过程不太理解...</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-light text-dark me-2"><i class="fas fa-eye me-1"></i> 89</span>
+                                <span class="badge bg-light text-dark me-2"><i class="fas fa-comment me-1"></i> 5</span>
+                                <span class="badge bg-light text-dark"><i class="fas fa-check-circle me-1"></i> 已解决</span>
+                            </div>
+                            <a href="question-detail.html" class="btn btn-sm btn-outline-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card question-card mb-4">
+                    <div class="d-flex mb-3">
+                        <span class="badge relativity-badge me-2">广义相对论</span>
+                        <small class="text-muted">提问于1天前</small>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">如何理解Schwarzschild度规的奇点问题？</h4>
+                        <p class="card-text">在r=2GM处坐标奇点和物理奇点的区别是什么？如何选择合适的坐标系消除坐标奇点？</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-light text-dark me-2"><i class="fas fa-eye me-1"></i> 67</span>
+                                <span class="badge bg-light text-dark me-2"><i class="fas fa-comment me-1"></i> 4</span>
+                                <span class="badge bg-light text-dark"><i class="fas fa-hourglass-half me-1"></i> 待解决</span>
+                            </div>
+                            <a href="question-detail.html" class="btn btn-sm btn-outline-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card question-card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <span class="badge statistical-badge me-2">统计力学</span>
+                            <small class="text-muted">提问于2天前</small>
+                        </div>
+                        <h4 class="card-title">正则系综和巨正则系综在实际应用中有何区别？</h4>
+                        <p class="card-text">在学习统计力学时，对这两种系综的选择标准不太清楚，什么情况下应该使用哪种系综？</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-light text-dark me-2"><i class="fas fa-eye me-1"></i> 56</span>
+                                <span class="badge bg-light text-dark me-2"><i class="fas fa-comment me-1"></i> 3</span>
+                                <span class="badge bg-light text-dark"><i class="fas fa-check-circle me-1"></i> 已解决</span>
+                            </div>
+                            <a href="question-detail.html" class="btn btn-sm btn-outline-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分页 -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">上一页</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">下一页</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- 右侧边栏 -->
+            <div class="col-lg-4">
+                <!-- 搜索框 -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-search me-2"></i>搜索问题</h5>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="输入关键词...">
+                            <button class="btn btn-primary" type="button">搜索</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分类筛选 -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-filter me-2"></i>筛选问题</h5>
+                        <ul class="nav nav-tabs" id="filterTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">全部</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="unanswered-tab" data-bs-toggle="tab" data-bs-target="#unanswered" type="button" role="tab">待解答</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-3" id="filterTabsContent">
+                            <div class="tab-pane fade show active" id="all" role="tabpanel">
+                                <div class="mb-3">
+                                    <label class="form-label">学科分类</label>
+                                    <select class="form-select">
+                                        <option>全部学科</option>
+                                        <option>量子力学</option>
+                                        <option>电动力学</option>
+                                        <option>统计力学</option>
+                                        <option>广义相对论</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">排序方式</label>
+                                    <select class="form-select">
+                                        <option>最新提问</option>
+                                        <option>最多浏览</option>
+                                        <option>最多回答</option>
+                                        <option>最多投票</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="unanswered" role="tabpanel">
+                                <p class="text-muted">显示所有尚未有满意答案的问题</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary w-100">应用筛选</button>
+                    </div>
+                </div>
+
+                <!-- 热门标签 -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-tags me-2"></i>热门标签</h5>
+                        <div class="d-flex flex-wrap">
+                            <a href="#" class="btn btn-sm btn-outline-secondary m-1">薛定谔方程</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary m-1">电磁场</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary m-1">配分函数</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary m-1">黑洞</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary m-1">波函数</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary m-1">麦克斯韦方程</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary m-1">熵</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary m-1">度规</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 活跃用户 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-users me-2"></i>活跃用户</h5>
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="user-avatar me-3" alt="用户头像">
+                                <div>
+                                    <h6 class="mb-0">张教授</h6>
+                                    <small class="text-muted">回答了128个问题</small>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="user-avatar me-3" alt="用户头像">
+                                <div>
+                                    <h6 class="mb-0">李研究员</h6>
+                                    <small class="text-muted">回答了97个问题</small>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                                <img src="https://randomuser.me/api/portraits/men/75.jpg" class="user-avatar me-3" alt="用户头像">
+                                <div>
+                                    <h6 class="mb-0">王同学</h6>
+                                    <small class="text-muted">回答了56个问题</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5><i class="fas fa-atom me-2"></i>PhysicsSolution Hub</h5>
+                    <p class="mt-3">专业物理学习资源平台</p>
+                    <a href="index.html" class="btn btn-outline-light mt-2">
+                        <i class="fas fa-arrow-left me-1"></i> 返回首页
+                    </a>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5>快速链接</h5>
+                    <div class="d-flex flex-wrap">
+                        <a href="community.html" class="btn btn-sm btn-outline-light m-1">问答社区</a>
+                        <a href="quantum.html" class="btn btn-sm btn-outline-light m-1">量子力学</a>
+                        <a href="electrodynamics.html" class="btn btn-sm btn-outline-light m-1">电动力学</a>
+                        <a href="statistical.html" class="btn btn-sm btn-outline-light m-1">统计力学</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">© 2023 PhysicsSolution Hub 问答社区</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 脚本加载 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // 示例交互功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 问题卡片悬停效果
+            const cards = document.querySelectorAll('.question-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

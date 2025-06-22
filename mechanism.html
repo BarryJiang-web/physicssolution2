@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>理论力学 | PhysicsSolution Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --mechanics-green: #28a745;
+            --mechanics-dark: #218838;
+            --physics-blue: #2b5fdc;
+        }
+        .mechanics-header {
+            background: linear-gradient(135deg, var(--mechanics-green) 0%, var(--mechanics-dark) 100%);
+            color: white;
+        }
+        .chapter-card {
+            border-left: 4px solid var(--mechanics-green);
+            transition: all 0.3s;
+        }
+        .chapter-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.1);
+        }
+        .problem-title {
+            color: var(--mechanics-green);
+            border-bottom: 2px solid var(--mechanics-green);
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--mechanics-green);
+        }
+        .book-cover {
+            max-height: 250px;
+            width: auto;
+            object-fit: contain;
+            padding: 15px;
+            background: #fff;
+        }
+        .solution-step {
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 3px solid var(--mechanics-green);
+        }
+        .resource-item {
+            border-left: 3px solid var(--physics-blue);
+            padding: 10px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        .resource-item:hover {
+            background-color: #f8f9fa;
+        }
+        .resource-item a {
+            color: #333;
+            text-decoration: none;
+        }
+        .resource-item a:hover {
+            color: var(--physics-blue);
+        }
+        @media (max-width: 768px) {
+            .book-cover {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-atom me-2"></i>PhysicsSolution Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="mechanics.html"><i class="fas fa-atom me-1"></i> 理论力学</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div id="authButtons">
+                        <a href="login.html" class="btn btn-outline-primary me-2">登录</a>
+                        <a href="login.html#register" class="btn btn-primary">注册</a>
+                    </div>
+                    <div id="userMenu" style="display: none;">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle me-2" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-1"></i> <span id="usernameDisplay"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="quantum.html"><i class="fas fa-code me-1"></i> 开发者模式</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i> 退出登录</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 理论力学页头 -->
+    <header class="mechanics-header py-5 mb-5">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold">
+                <i class="fas fa-atom me-2"></i>理论力学习题解答库
+            </h1>
+            <p class="lead mb-0">涵盖拉格朗日力学、哈密顿力学、刚体运动等核心内容</p>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container">
+        <div class="row">
+            <!-- 左侧导航 -->
+            <div class="col-lg-3 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-list-ul me-2"></i>章节导航</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="#chapter1" class="list-group-item list-group-item-action active">1. 牛顿力学</a>
+                        <a href="#chapter2" class="list-group-item list-group-item-action">2. 拉格朗日力学</a>
+                        <a href="#chapter3" class="list-group-item list-group-item-action">3. 哈密顿力学</a>
+                        <a href="#chapter4" class="list-group-item list-group-item-action">4. 刚体力学</a>
+                        <a href="#chapter5" class="list-group-item list-group-item-action">5. 小振动</a>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-book me-2"></i>推荐教材</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <img src="mechanics.jpg" alt="理论力学教程" class="img-fluid book-cover mb-3">
+                        <h6>理论力学教程</h6>
+                        <p class="text-muted small">周衍柏</p>
+                    </div>
+                </div>
+
+                <!-- 资料库部分 -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-file-pdf me-2"></i>资料库</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="resource-item">
+                            <a href="pdfs/goldstein-mechanics.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>Goldstein《经典力学》</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">经典理论力学教材</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="pdfs/zhou-mechanics.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>周衍柏《理论力学教程》</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">中文经典教材</small>
+                        </div>
+                        <div class="resource-item">
+                            <a href="pdfs/landau-mechanics.pdf" target="_blank" class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                <span>Landau《力学》</span>
+                            </a>
+                            <small class="text-muted d-block mt-1">理论物理学教程第一卷</small>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                                <i class="fas fa-upload me-1"></i>上传资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧内容 -->
+            <div class="col-lg-9">
+                <!-- 第一章：牛顿力学 -->
+                <div class="mb-5" id="chapter1">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h3 mb-0">
+                            <i class="fas fa-apple-alt me-2"></i>第一章：牛顿力学
+                        </h2>
+                        <span class="badge rounded-pill" style="background-color: var(--mechanics-green);">15题</span>
+                    </div>
+
+                    <!-- 问题1.1 -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="problem-title mb-4">问题1.1 - 中心力场运动</h4>
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-question-circle me-2"></i>题目描述</h5>
+                                <p>证明在中心力场中运动的质点角动量守恒。</p>
+                            </div>
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-lightbulb me-2"></i>解答</h5>
+                                <div class="solution-step">
+                                    <p><strong>步骤1：</strong> 角动量定义：</p>
+                                    <p>\[
+                                    \mathbf{L} = \mathbf{r} \times \mathbf{p} = m \mathbf{r} \times \mathbf{v}
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p><strong>步骤2：</strong> 角动量时间导数：</p>
+                                    <p>\[
+                                    \frac{d\mathbf{L}}{dt} = m \mathbf{v} \times \mathbf{v} + m \mathbf{r} \times \mathbf{a} = \mathbf{r} \times \mathbf{F}
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p><strong>步骤3：</strong> 中心力场中 \(\mathbf{F} = f(r)\hat{r}\)，所以：</p>
+                                    <p>\[
+                                    \frac{d\mathbf{L}}{dt} = \mathbf{r} \times f(r)\hat{r} = 0
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p><strong>步骤4：</strong> 因此角动量 \(\mathbf{L}\) 守恒。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第二章：拉格朗日力学 -->
+                <div class="mb-5" id="chapter2">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h3 mb-0">
+                            <i class="fas fa-calculator me-2"></i>第二章：拉格朗日力学
+                        </h2>
+                        <span class="badge rounded-pill" style="background-color: var(--mechanics-green);">18题</span>
+                    </div>
+
+                    <!-- 问题2.1 -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="problem-title mb-4">问题2.1 - 单摆的拉格朗日量</h4>
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-question-circle me-2"></i>题目描述</h5>
+                                <p>写出单摆系统的拉格朗日量，并推导其运动方程。</p>
+                            </div>
+                            <div class="mb-4">
+                                <h5 class="fw-bold"><i class="fas fa-lightbulb me-2"></i>解答</h5>
+                                <div class="solution-step">
+                                    <p><strong>步骤1：</strong> 单摆的动能和势能：</p>
+                                    <p>\[
+                                    T = \frac{1}{2}ml^2\dot{\theta}^2, \quad V = mgl(1 - \cos\theta)
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p><strong>步骤2：</strong> 拉格朗日量：</p>
+                                    <p>\[
+                                    L = T - V = \frac{1}{2}ml^2\dot{\theta}^2 - mgl(1 - \cos\theta)
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p><strong>步骤3：</strong> 欧拉-拉格朗日方程：</p>
+                                    <p>\[
+                                    \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{\theta}}\right) - \frac{\partial L}{\partial \theta} = 0
+                                    \]</p>
+                                </div>
+                                <div class="solution-step">
+                                    <p><strong>步骤4：</strong> 计算得到运动方程：</p>
+                                    <p>\[
+                                    ml^2\ddot{\theta} + mgl\sin\theta = 0 \Rightarrow \ddot{\theta} + \frac{g}{l}\sin\theta = 0
+                                    \]</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 上传资料的模态框 -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">上传PDF资料</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="uploadForm">
+                        <div class="mb-3">
+                            <label for="resourceName" class="form-label">资料名称</label>
+                            <input type="text" class="form-control" id="resourceName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="resourceFile" class="form-label">选择PDF文件</label>
+                            <input type="file" class="form-control" id="resourceFile" accept=".pdf" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="resourceDescription" class="form-label">简要描述</label>
+                            <textarea class="form-control" id="resourceDescription" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="submitUpload">上传</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="py-5 text-white" style="background: linear-gradient(135deg, var(--mechanics-green) 0%, var(--mechanics-dark) 100%);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5><i class="fas fa-atom me-2"></i>理论力学</h5>
+                    <p class="mt-3">探索经典力学系统的运动规律</p>
+                    <a href="index.html" class="btn btn-outline-light mt-2">
+                        <i class="fas fa-arrow-left me-1"></i> 返回首页
+                    </a>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5>相关学科</h5>
+                    <div class="d-flex flex-wrap">
+                        <a href="quantum.html" class="btn btn-sm btn-outline-light m-1">量子力学</a>
+                        <a href="electrodynamics.html" class="btn btn-sm btn-outline-light m-1">电动力学</a>
+                        <a href="statistical.html" class="btn btn-sm btn-outline-light m-1">统计力学</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">© 2023 PhysicsSolution Hub 理论力学分部</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // 检查登录状态并更新UI
+        function updateAuthUI() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+            const authButtons = document.getElementById('authButtons');
+            const userMenu = document.getElementById('userMenu');
+            
+            if(isLoggedIn && username) {
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'block';
+                document.getElementById('usernameDisplay').textContent = username;
+            } else {
+                authButtons.style.display = 'block';
+                userMenu.style.display = 'none';
+            }
+        }
+        
+        // 退出登录功能
+        document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = 'index.html';
+        });
+        
+        // 上传功能示例
+        document.getElementById('submitUpload')?.addEventListener('click', function() {
+            const resourceName = document.getElementById('resourceName').value;
+            const fileInput = document.getElementById('resourceFile');
+            
+            if(resourceName && fileInput.files.length > 0) {
+                alert(`文件 ${fileInput.files[0].name} 上传成功！`);
+                // 实际应用中这里应该有AJAX上传逻辑
+                var bootstrapModal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+                bootstrapModal.hide();
+            } else {
+                alert('请填写完整信息并选择文件！');
+            }
+        });
+        
+        // 页面加载时更新UI
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthUI();
+        });
+    </script>
+</body>
+</html>

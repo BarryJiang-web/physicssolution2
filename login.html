@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 | PhysicsSolution Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --physics-blue: #2b5fdc;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            margin-top: 100px;
+        }
+        .login-card {
+            border-top: 4px solid var(--physics-blue);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .login-header {
+            background-color: var(--physics-blue);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container login-container">
+        <div class="card login-card">
+            <div class="card-header login-header text-center py-3">
+                <h4><i class="fas fa-atom me-2"></i>PhysicsSolution Hub</h4>
+                <p class="mb-0">物理学习助手平台</p>
+            </div>
+            <div class="card-body p-4">
+                <ul class="nav nav-tabs mb-4" id="authTabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="login-tab" data-bs-toggle="tab" href="#login">登录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="register-tab" data-bs-toggle="tab" href="#register">注册</a>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="authTabsContent">
+                    <!-- 登录表单 -->
+                    <div class="tab-pane fade show active" id="login">
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="loginUsername" class="form-label">学号/账号</label>
+                                <input type="text" class="form-control" id="loginUsername" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label">密码</label>
+                                <input type="password" class="form-control" id="loginPassword" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">登录</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- 注册表单 -->
+                    <div class="tab-pane fade" id="register">
+                        <form id="registerForm">
+                            <div class="mb-3">
+                                <label for="regUsername" class="form-label">学号</label>
+                                <input type="text" class="form-control" id="regUsername" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="regEmail" class="form-label">邮箱</label>
+                                <input type="email" class="form-control" id="regEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="regPassword" class="form-label">密码</label>
+                                <input type="password" class="form-control" id="regPassword" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="regConfirmPassword" class="form-label">确认密码</label>
+                                <input type="password" class="form-control" id="regConfirmPassword" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-outline-primary">注册</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="index.html" class="text-decoration-none"><i class="fas fa-arrow-left me-1"></i>返回首页</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // 处理登录表单提交
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // 验证账号密码
+            if(username === '2150019' && password === 'Qzqqzq520') {
+                // 存储登录状态
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
+                alert('登录成功！您将获得开发者权限。');
+                window.location.href = 'quantum.html';
+            } else {
+                alert('账号或密码错误！');
+            }
+        });
+        
+        // 处理注册表单提交
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            if(password !== confirmPassword) {
+                alert('两次输入的密码不一致！');
+                return;
+            }
+            
+            alert('注册成功！请使用您的账号登录。');
+            document.getElementById('login-tab').click();
+        });
+    </script>
+</body>
+</html>

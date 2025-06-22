@@ -8,6 +8,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
         :root {
             --physics-blue: #2b5fdc;
@@ -17,25 +18,66 @@
             --quantum-info-color: #6a11cb;
             --solid-state-color: #2575fc;
             --qft-color: #fd7e14;
+            --optics-color: #17a2b8;
+            --fluid-color: #20c997;
+            --acoustics-color: #6610f2;
+            --atomic-color: #e83e8c;
+            --ai-color: #6f42c1;
+            --group-theory-color: #ffc107;
+            --mechanics-color: #6c757d;
         }
         body {
             font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
             background-color: #f8f9fa;
+            scroll-behavior: smooth;
         }
         .navbar-brand {
             font-weight: 700;
             color: var(--physics-blue) !important;
+            transition: all 0.3s ease;
+        }
+        .navbar-brand:hover {
+            transform: scale(1.05);
         }
         .search-box {
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .search-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
         .physics-card {
             transition: all 0.3s ease;
-            border-left: 4px solid var(--physics-blue);
+            border-left: 5px solid var(--physics-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        .physics-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(43,95,220,0.1) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         .physics-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+        }
+        .physics-card:hover::before {
+            opacity: 1;
+        }
+        .physics-card .card-link-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
         .formula-preview {
             background-color: #f0f2f5;
@@ -43,10 +85,11 @@
             padding: 10px;
             min-height: 50px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
         }
         .formula-preview:hover {
             background-color: #e2e6ea;
+            transform: scale(1.02);
         }
         .subject-badge {
             background-color: var(--physics-red);
@@ -66,17 +109,21 @@
             object-fit: contain;
             padding: 10px;
             background: #fff;
+            transition: all 0.3s ease;
+        }
+        .physics-card:hover .book-cover {
+            transform: scale(1.05);
         }
         .more-books {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-out;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .more-books.expanded {
-            max-height: 1000px;
+            max-height: 5000px;
         }
         .browse-btn i {
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
         .browse-btn.expanded i {
             transform: rotate(180deg);
@@ -109,6 +156,11 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
         }
         .question-card .card-body {
             flex: 1;
@@ -129,6 +181,36 @@
         .problem-count {
             min-width: 100px;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+        .physics-card:hover .problem-count {
+            transform: scale(1.1);
+        }
+        
+        /* 功能卡片样式 */
+        .feature-card {
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--physics-blue) 0%, #1a3a8f 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2);
         }
         
         /* 响应式调整 */
@@ -138,6 +220,46 @@
                 border-right: none;
                 animation: none;
             }
+            .physics-card {
+                margin-bottom: 20px;
+            }
+        }
+        
+        /* 脉冲动画 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        /* 浮动动画 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        /* 滚动提示 */
+        .scroll-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--physics-blue);
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
         }
     </style>
 </head>
@@ -165,11 +287,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fas fa-vial me-1"></i> 虚拟实验</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-file-alt me-1"></i> 论文解析</a>
+                    </li>
                 </ul>
                 <div class="d-flex">
                     <div id="authButtons">
                         <a href="login.html" class="btn btn-outline-primary me-2">登录</a>
-                        <a href="login.html#register" class="btn btn-primary">注册</a>
+                        <a href="login.html#register" class="btn btn-primary pulse-animation">注册</a>
                     </div>
                     <div id="userMenu" style="display: none;">
                         <div class="dropdown">
@@ -189,14 +314,14 @@
     </nav>
 
     <!-- 主搜索区 -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="row justify-content-center">
+    <section class="py-5 bg-light position-relative" style="min-height: 80vh;">
+        <div class="container h-100">
+            <div class="row justify-content-center align-items-center h-100">
                 <div class="col-lg-8 text-center">
                     <h1 class="display-5 fw-bold mb-4 animate__animated animate__fadeIn">
                         <span class="typewriter">探索物理世界的奥秘</span>
                     </h1>
-                    <p class="lead mb-5 animate__animated animate__fadeIn animate__delay-1s">汇聚经典物理与现代理论，提供权威教材习题解析与专业学习指导</p>
+                    <p class="lead mb-5 animate__animated animate__fadeIn animate__delay-1s">汇聚经典物理与现代理论，提供权威教材习题解析、前沿论文推导与专业学习指导</p>
                     
                     <div class="search-box bg-white p-4 rounded-3 animate__animated animate__fadeIn animate__delay-1s">
                         <div class="input-group mb-3">
@@ -219,14 +344,17 @@
                     </div>
                 </div>
             </div>
+            <div class="scroll-hint animate__animated animate__fadeIn animate__delay-2s" onclick="document.getElementById('textbooks').scrollIntoView({behavior: 'smooth'})">
+                <i class="fas fa-chevron-down"></i>
+            </div>
         </div>
     </section>
 
     <!-- 热门教材区 -->
-    <section class="py-5">
+    <section class="py-5" id="textbooks">
         <div class="container">
-            <h2 class="text-center mb-5"><i class="fas fa-book-open me-2"></i>经典教材解析</h2>
-            <p class="text-center text-muted mb-5">精选国内外权威物理教材，提供详细习题解答与知识点解析</p>
+            <h2 class="text-center mb-5 animate__animated animate__fadeIn"><i class="fas fa-book-open me-2"></i>经典教材解析</h2>
+            <p class="text-center text-muted mb-5 animate__animated animate__fadeIn animate__delay-1s">精选国内外权威物理教材，提供详细习题解答与知识点解析，点击任意区域即可查看</p>
             
             <div class="row g-4">
                 <!-- 教材卡片1 - 电动力学 -->
@@ -242,54 +370,58 @@
                                 <a href="electrodynamics.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                             </div>
                         </div>
+                        <a href="electrodynamics.html" class="card-link-overlay"></a>
                     </div>
                 </div>
                 
                 <!-- 教材卡片2 - 量子力学 -->
                 <div class="col-md-3">
-                    <div class="card h-100 physics-card">
+                    <div class="card h-100 physics-card" style="border-left-color: var(--physics-purple);">
                         <img src="quantum.jpeg" class="card-img-top book-cover" alt="量子力学教材封面">
                         <div class="card-body">
                             <h5 class="card-title">量子力学教程</h5>
                             <h6 class="card-subtitle mb-2 text-muted">周世勋</h6>
                             <p class="card-text">国内经典量子力学教材，从基本原理出发，详细阐述量子理论及其数学表述。</p>
                             <div class="card-footer-content">
-                                <span class="badge bg-primary rounded-pill problem-count">285题解析</span>
+                                <span class="badge rounded-pill problem-count" style="background-color: var(--physics-purple);">285题解析</span>
                                 <a href="quantum.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                             </div>
                         </div>
+                        <a href="quantum.html" class="card-link-overlay"></a>
                     </div>
                 </div>
                 
                 <!-- 教材卡片3 - 统计力学 -->
                 <div class="col-md-3">
-                    <div class="card h-100 physics-card">
+                    <div class="card h-100 physics-card" style="border-left-color: var(--physics-green);">
                         <img src="statis.jpg" class="card-img-top book-cover" alt="统计力学教材封面">
                         <div class="card-body">
                             <h5 class="card-title">统计力学</h5>
                             <h6 class="card-subtitle mb-2 text-muted">R. K. Pathria</h6>
                             <p class="card-text">统计物理学经典教材，深入讲解系综理论、量子统计及相变理论等核心内容。</p>
                             <div class="card-footer-content">
-                                <span class="badge bg-primary rounded-pill problem-count">176题解析</span>
+                                <span class="badge rounded-pill problem-count" style="background-color: var(--physics-green);">176题解析</span>
                                 <a href="statistical.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                             </div>
                         </div>
+                        <a href="statistical.html" class="card-link-overlay"></a>
                     </div>
                 </div>
                 
                 <!-- 教材卡片4 - 广义相对论 -->
                 <div class="col-md-3">
-                    <div class="card h-100 physics-card">
+                    <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
                         <img src="relative.jpeg" class="card-img-top book-cover" alt="广义相对论教材封面">
                         <div class="card-body">
                             <h5 class="card-title">广义相对论基础</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Sean Carroll</h6>
                             <p class="card-text">现代广义相对论经典教材，系统介绍时空几何、爱因斯坦场方程及其精确解。</p>
                             <div class="card-footer-content">
-                                <span class="badge bg-primary rounded-pill problem-count">95题解析</span>
+                                <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">95题解析</span>
                                 <a href="relative.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                             </div>
                         </div>
+                        <a href="relative.html" class="card-link-overlay"></a>
                     </div>
                 </div>
             </div>
@@ -310,6 +442,7 @@
                                     <a href="quantum-info.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="quantum-info.html" class="card-link-overlay"></a>
                         </div>
                     </div>
                     
@@ -326,6 +459,7 @@
                                     <a href="solid-state.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="solid-state.html" class="card-link-overlay"></a>
                         </div>
                     </div>
 
@@ -342,154 +476,166 @@
                                     <a href="qft.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="qft.html" class="card-link-overlay"></a>
                         </div>
                     </div>
 
                     <!-- 宇宙学的物理基础 -->
                     <div class="col-md-3">
-                        <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
+                        <div class="card h-100 physics-card" style="border-left-color: var(--physics-purple);">
                             <img src="cosmos.jpeg" class="card-img-top book-cover" alt="宇宙学教材封面">
                             <div class="card-body">
                                 <h5 class="card-title">宇宙学的物理基础</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">Steven Weinberg</h6>
                                 <p class="card-text">宇宙学权威著作，深入探讨宇宙演化、暴胀理论与宇宙微波背景辐射。</p>
                                 <div class="card-footer-content">
-                                    <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">78题解析</span>
+                                    <span class="badge rounded-pill problem-count" style="background-color: var(--physics-purple);">78题解析</span>
                                     <a href="cosmos.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="cosmos.html" class="card-link-overlay"></a>
                         </div>
                     </div>
 
                     <!-- 数学物理方法 -->
                     <div class="col-md-3">
-                        <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
+                        <div class="card h-100 physics-card" style="border-left-color: var(--mechanics-color);">
                             <img src="mathphysics.webp" class="card-img-top book-cover" alt="数学物理方法教材封面">
                             <div class="card-body">
                                 <h5 class="card-title">数学物理方法</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">顾樵</h6>
                                 <p class="card-text">物理专业数学工具书，涵盖复变函数、特殊函数与偏微分方程等核心内容。</p>
                                 <div class="card-footer-content">
-                                    <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">78题解析</span>
+                                    <span class="badge rounded-pill problem-count" style="background-color: var(--mechanics-color);">78题解析</span>
                                     <a href="mathphysics.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="mathphysics.html" class="card-link-overlay"></a>
                         </div>
                     </div>
 
                     <!-- 理论力学 -->
                     <div class="col-md-3">
-                        <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
-                            <img src="mechanism.jpeg" class="card-img-top book-cover" alt="数学物理方法教材封面">
+                        <div class="card h-100 physics-card" style="border-left-color: var(--mechanics-color);">
+                            <img src="mechanism.jpeg" class="card-img-top book-cover" alt="理论力学教材封面">
                             <div class="card-body">
                                 <h5 class="card-title">理论力学</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">顾樵</h6>
-                                <p class="card-text">理论力学分析，理论物理的入门课程</p>
+                                <p class="card-text">理论物理的入门课程，系统讲解拉格朗日力学、哈密顿力学与刚体动力学。</p>
                                 <div class="card-footer-content">
-                                    <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">78题解析</span>
+                                    <span class="badge rounded-pill problem-count" style="background-color: var(--mechanics-color);">78题解析</span>
                                     <a href="mechanism.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="mechanism.html" class="card-link-overlay"></a>
                         </div>
                     </div>
 
                     <!-- 人工智能与物理学 -->
                     <div class="col-md-3">
-                        <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
-                            <img src="AI.png" class="card-img-top book-cover" alt="数学物理方法教材封面">
+                        <div class="card h-100 physics-card" style="border-left-color: var(--ai-color);">
+                            <img src="AI.png" class="card-img-top book-cover" alt="人工智能与物理学教材封面">
                             <div class="card-body">
                                 <h5 class="card-title">人工智能与物理学</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">TBD</h6>
-                                <p class="card-text">人工智能与物理学交叉也很有意思</p>
+                                <p class="card-text">探索AI在物理研究中的应用，包括机器学习解决复杂物理问题的新方法。</p>
                                 <div class="card-footer-content">
-                                    <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">78题解析</span>
+                                    <span class="badge rounded-pill problem-count" style="background-color: var(--ai-color);">78题解析</span>
                                     <a href="AI.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="AI.html" class="card-link-overlay"></a>
                         </div>
                     </div>
 
                     <!-- 物理学中的群论 -->
                     <div class="col-md-3">
-                        <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
-                            <img src="group.jpg" class="card-img-top book-cover" alt="数学物理方法教材封面">
+                        <div class="card h-100 physics-card" style="border-left-color: var(--group-theory-color);">
+                            <img src="group.jpg" class="card-img-top book-cover" alt="群论教材封面">
                             <div class="card-body">
                                 <h5 class="card-title">物理学中的群论</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">顾樵</h6>
-                                <p class="card-text">群论，启动！</p>
+                                <p class="card-text">群论在物理中的应用，包括点群、李群及其在量子力学和固体物理中的表示。</p>
                                 <div class="card-footer-content">
-                                    <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">78题解析</span>
+                                    <span class="badge rounded-pill problem-count" style="background-color: var(--group-theory-color);">78题解析</span>
                                     <a href="group.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="group.html" class="card-link-overlay"></a>
                         </div>
                     </div>
 
                     <!--光学 -->
                     <div class="col-md-3">
-                        <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
-                            <img src="optical.png" class="card-img-top book-cover" alt="数学物理方法教材封面">
+                        <div class="card h-100 physics-card" style="border-left-color: var(--optics-color);">
+                            <img src="optical.png" class="card-img-top book-cover" alt="光学教材封面">
                             <div class="card-body">
                                 <h5 class="card-title">光学</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">顾樵</h6>
-                                <p class="card-text">本科经典课程</p>
+                                <p class="card-text">本科经典课程，涵盖几何光学、波动光学与量子光学的基本原理与应用。</p>
                                 <div class="card-footer-content">
-                                    <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">78题解析</span>
+                                    <span class="badge rounded-pill problem-count" style="background-color: var(--optics-color);">78题解析</span>
                                     <a href="optical.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="optical.html" class="card-link-overlay"></a>
                         </div>
                     </div>
 
                     <!-- 流体力学 -->
                     <div class="col-md-3">
-                        <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
-                            <img src="fluid.webp" class="card-img-top book-cover" alt="数学物理方法教材封面">
+                        <div class="card h-100 physics-card" style="border-left-color: var(--fluid-color);">
+                            <img src="fluid.webp" class="card-img-top book-cover" alt="流体力学教材封面">
                             <div class="card-body">
                                 <h5 class="card-title">流体力学</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">顾樵</h6>
-                                <p class="card-text">群论，启动！</p>
+                                <p class="card-text">流体运动的基本规律，包括纳维-斯托克斯方程、湍流与边界层理论。</p>
                                 <div class="card-footer-content">
-                                    <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">78题解析</span>
+                                    <span class="badge rounded-pill problem-count" style="background-color: var(--fluid-color);">78题解析</span>
                                     <a href="fluid.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="fluid.html" class="card-link-overlay"></a>
                         </div>
                     </div>
+                    
                     <!-- 声学 -->
                     <div class="col-md-3">
-                        <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
-                            <img src="sound.webp" class="card-img-top book-cover" alt="数学物理方法教材封面">
+                        <div class="card h-100 physics-card" style="border-left-color: var(--acoustics-color);">
+                            <img src="sound.webp" class="card-img-top book-cover" alt="声学教材封面">
                             <div class="card-body">
-                                <h5 class="card-title">声学</h5>
+                                <h5 class="card-title">声学基础</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">顾樵</h6>
-                                <p class="card-text">群论，启动！</p>
+                                <p class="card-text">声波传播的基本理论，包括声学波动方程、声阻抗与声学测量技术。</p>
                                 <div class="card-footer-content">
-                                    <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">78题解析</span>
+                                    <span class="badge rounded-pill problem-count" style="background-color: var(--acoustics-color);">78题解析</span>
                                     <a href="sound.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="sound.html" class="card-link-overlay"></a>
                         </div>
                     </div>
+                    
                     <!-- 原子物理与核物理 -->
                     <div class="col-md-3">
-                        <div class="card h-100 physics-card" style="border-left-color: var(--qft-color);">
-                            <img src="atom.webp" class="card-img-top book-cover" alt="数学物理方法教材封面">
+                        <div class="card h-100 physics-card" style="border-left-color: var(--atomic-color);">
+                            <img src="atom.webp" class="card-img-top book-cover" alt="原子物理教材封面">
                             <div class="card-body">
-                                <h5 class="card-title">原子物理与核物理</h5>
+                                <h5 class="card-title">原子与核物理</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">顾樵</h6>
-                                <p class="card-text">群论，启动！</p>
+                                <p class="card-text">原子结构与核物理基础，包括量子原子模型、核力与放射性衰变理论。</p>
                                 <div class="card-footer-content">
-                                    <span class="badge rounded-pill problem-count" style="background-color: var(--qft-color);">78题解析</span>
+                                    <span class="badge rounded-pill problem-count" style="background-color: var(--atomic-color);">78题解析</span>
                                     <a href="atom.html" class="btn btn-sm btn-outline-primary">查看解析</a>
                                 </div>
                             </div>
+                            <a href="atom.html" class="card-link-overlay"></a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="text-center mt-4">
-                <button class="btn btn-primary browse-btn" id="browseBtn">
+                <button class="btn btn-primary browse-btn pulse-animation" id="browseBtn">
                     浏览全部教材 <i class="fas fa-arrow-down ms-1"></i>
                 </button>
             </div>
@@ -499,8 +645,8 @@
     <!-- 问答社区精选 -->
     <section class="py-5 bg-light">
         <div class="container">
-            <h2 class="text-center mb-5"><i class="fas fa-comments me-2"></i>学术讨论区</h2>
-            <p class="text-center text-muted mb-5">来自全球物理学习者的疑难解答与学术交流</p>
+            <h2 class="text-center mb-5 animate__animated animate__fadeIn"><i class="fas fa-comments me-2"></i>学术讨论区</h2>
+            <p class="text-center text-muted mb-5 animate__animated animate__fadeIn animate__delay-1s">来自全球物理学习者的疑难解答与学术交流</p>
             
             <div class="row">
                 <div class="col-lg-4 mb-4">
@@ -566,7 +712,7 @@
             </div>
             
             <div class="text-center mt-3">
-                <a href="community.html" class="btn btn-outline-primary">进入学术讨论区 <i class="fas fa-external-link-alt ms-1"></i></a>
+                <a href="community.html" class="btn btn-outline-primary pulse-animation">进入学术讨论区 <i class="fas fa-external-link-alt ms-1"></i></a>
             </div>
         </div>
     </section>
@@ -574,14 +720,14 @@
     <!-- 特色功能 -->
     <section class="py-5">
         <div class="container">
-            <h2 class="text-center mb-5"><i class="fas fa-magic me-2"></i>学习工具</h2>
-            <p class="text-center text-muted mb-5">专为物理学习设计的高效工具，提升学习体验</p>
+            <h2 class="text-center mb-5 animate__animated animate__fadeIn"><i class="fas fa-magic me-2"></i>学习工具</h2>
+            <p class="text-center text-muted mb-5 animate__animated animate__fadeIn animate__delay-1s">专为物理学习设计的高效工具，提升学习体验</p>
             
             <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 text-center">
-                        <div class="card-body">
-                            <div class="display-4 text-primary mb-3">
+                <div class="col-md-3">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
                                 <i class="fas fa-calculator"></i>
                             </div>
                             <h4 class="card-title">物理公式计算器</h4>
@@ -591,10 +737,10 @@
                     </div>
                 </div>
                 
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 text-center">
-                        <div class="card-body">
-                            <div class="display-4 text-primary mb-3">
+                <div class="col-md-3">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
                                 <i class="fas fa-camera"></i>
                             </div>
                             <h4 class="card-title">智能搜题</h4>
@@ -604,14 +750,27 @@
                     </div>
                 </div>
                 
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 text-center">
-                        <div class="card-body">
-                            <div class="display-4 text-primary mb-3">
+                <div class="col-md-3">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
                                 <i class="fas fa-vr-cardboard"></i>
                             </div>
                             <h4 class="card-title">交互式实验模拟</h4>
                             <p class="card-text">3D可视化模拟各类物理实验现象，支持参数调节与实时数据采集分析</p>
+                            <a href="#" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <h4 class="card-title">前沿论文解析</h4>
+                            <p class="card-text">精选物理学前沿论文，提供详细推导过程与背景知识解读，助力科研学习</p>
                             <a href="#" class="stretched-link"></a>
                         </div>
                     </div>
@@ -641,6 +800,7 @@
                         <li class="mb-2"><a href="#" class="text-white">教材库</a></li>
                         <li class="mb-2"><a href="community.html" class="text-white">学术讨论</a></li>
                         <li class="mb-2"><a href="#" class="text-white">贡献指南</a></li>
+                        <li class="mb-2"><a href="#" class="text-white">论文解析</a></li>
                     </ul>
                 </div>
                 
@@ -699,8 +859,7 @@
             }
             
             // 浏览全部教材按钮功能
-            
-                document.getElementById('browseBtn').addEventListener('click', function() {
+            document.getElementById('browseBtn').addEventListener('click', function() {
                 const moreBooks = document.getElementById('moreBooks');
                 const isExpanded = moreBooks.classList.contains('expanded');
                 
@@ -724,20 +883,33 @@
             window.addEventListener('scroll', function() {
                 if (window.scrollY > 50) {
                     navbar.classList.add('shadow-sm');
+                    navbar.classList.add('bg-white');
                 } else {
                     navbar.classList.remove('shadow-sm');
+                    navbar.classList.remove('bg-white');
                 }
             });
             
             // 卡片悬停效果
-            const cards = document.querySelectorAll('.physics-card');
+            const cards = document.querySelectorAll('.physics-card, .question-card');
             cards.forEach(card => {
                 card.addEventListener('mouseenter', function() {
-                    this.style.boxShadow = '0 10px 20px rgba(0,0,0,0.15)';
+                    this.style.boxShadow = '0 15px 30px rgba(0,0,0,0.15)';
                 });
                 card.addEventListener('mouseleave', function() {
                     this.style.boxShadow = '';
                 });
+            });
+            
+            // 自动为所有卡片添加链接覆盖层
+            document.querySelectorAll('.physics-card').forEach(card => {
+                const link = card.querySelector('a[href].btn-outline-primary');
+                if (link) {
+                    const overlay = document.createElement('a');
+                    overlay.className = 'card-link-overlay';
+                    overlay.href = link.href;
+                    card.appendChild(overlay);
+                }
             });
         });
     </script>

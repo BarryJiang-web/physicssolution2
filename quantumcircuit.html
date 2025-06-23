@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量子电路搭建 | PhysicsSolution Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/quantum-circuit@1.9.0/dist/quantum-circuit.min.js"></script>
+    <style>
+        :root {
+            --physics-blue: #2b5fdc;
+            --physics-red: #d62d20;
+            --physics-green: #28a745;
+            --physics-purple: #6f42c1;
+            --quantum-info-color: #6a11cb;
+        }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .quantum-header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+        .gate-palette {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .gate-btn {
+            margin: 0.2rem;
+            min-width: 80px;
+        }
+        .circuit-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            min-height: 300px;
+        }
+        .result-panel {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .example-card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .example-card .card-body {
+            position: relative;
+        }
+        .matrix-container {
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+        .truth-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .truth-table th, .truth-table td {
+            border: 1px solid #dee2e6;
+            padding: 0.5rem;
+            text-align: center;
+        }
+        .truth-table th {
+            background-color: #f8f9fa;
+        }
+        .q-circuit {
+            width: 100%;
+            height: auto;
+            background-color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-atom me-2"></i>PhysicsSolution Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="experiment.html"><i class="fas fa-flask me-1"></i> 交互实验</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <header class="quantum-header">
+        <div class="container">
+            <h1 class="display-5 fw-bold mb-3">
+                <i class="fas fa-project-diagram me-2"></i>量子电路搭建
+            </h1>
+            <p class="lead">可视化构建量子电路，模拟量子算法执行过程，观察量子态演化</p>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <div class="container mb-5">
+        <div class="row">
+            <!-- 左侧面板 -->
+            <div class="col-lg-8">
+                <!-- 量子门面板 -->
+                <div class="gate-palette">
+                    <h5><i class="fas fa-puzzle-piece me-2"></i>量子门</h5>
+                    <div class="d-flex flex-wrap mb-3">
+                        <button class="btn btn-outline-primary gate-btn" data-gate="h">H门</button>
+                        <button class="btn btn-outline-primary gate-btn" data-gate="x">X门</button>
+                        <button class="btn btn-outline-primary gate-btn" data-gate="y">Y门</button>
+                        <button class="btn btn-outline-primary gate-btn" data-gate="z">Z门</button>
+                        <button class="btn btn-outline-primary gate-btn" data-gate="s">S门</button>
+                        <button class="btn btn-outline-primary gate-btn" data-gate="t">T门</button>
+                        <button class="btn btn-outline-primary gate-btn" data-gate="cx">CNOT门</button>
+                        <button class="btn btn-outline-primary gate-btn" data-gate="swap">SWAP门</button>
+                        <button class="btn btn-outline-primary gate-btn" data-gate="measure">测量</button>
+                    </div>
+                    <div class="d-flex">
+                        <button id="addQubit" class="btn btn-success me-2"><i class="fas fa-plus me-1"></i>添加量子位</button>
+                        <button id="removeQubit" class="btn btn-danger me-2"><i class="fas fa-minus me-1"></i>移除量子位</button>
+                        <button id="clearCircuit" class="btn btn-warning me-2"><i class="fas fa-trash me-1"></i>清空电路</button>
+                        <button id="runCircuit" class="btn btn-primary"><i class="fas fa-play me-1"></i>运行电路</button>
+                    </div>
+                </div>
+
+                <!-- 电路画布 -->
+                <div class="circuit-container">
+                    <h5><i class="fas fa-project-diagram me-2"></i>量子电路</h5>
+                    <div id="circuit" class="q-circuit"></div>
+                </div>
+
+                <!-- 结果面板 -->
+                <div class="result-panel">
+                    <h5><i class="fas fa-chart-bar me-2"></i>结果分析</h5>
+                    <ul class="nav nav-tabs mb-3" id="resultTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="matrix-tab" data-bs-toggle="tab" data-bs-target="#matrix" type="button">矩阵表示</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="truth-table-tab" data-bs-toggle="tab" data-bs-target="#truth-table" type="button">真值表</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="state-tab" data-bs-toggle="tab" data-bs-target="#state" type="button">量子态</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="resultTabsContent">
+                        <div class="tab-pane fade show active" id="matrix" role="tabpanel">
+                            <div class="matrix-container" id="matrixOutput">
+                                请构建量子电路并点击"运行电路"按钮...
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="truth-table" role="tabpanel">
+                            <div id="truthTableOutput">
+                                <table class="truth-table">
+                                    <tr>
+                                        <th>输入</th>
+                                        <th>输出</th>
+                                        <th>概率</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">请构建量子电路并点击"运行电路"按钮...</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="state" role="tabpanel">
+                            <div id="stateOutput">
+                                请构建量子电路并点击"运行电路"按钮...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧面板 -->
+            <div class="col-lg-4">
+                <!-- 量子算法示例 -->
+                <div class="example-card card">
+                    <div class="card-header bg-primary text-white">
+                        <i class="fas fa-lightbulb me-2"></i>量子傅里叶变换(QFT)电路
+                    </div>
+                    <div class="card-body">
+                        <p>量子傅里叶变换是许多量子算法的关键组成部分，包括Shor算法。</p>
+                        <div id="qftExample" class="q-circuit mb-3"></div>
+                        <button id="loadQFT" class="btn btn-primary btn-sm"><i class="fas fa-download me-1"></i>加载此电路</button>
+                    </div>
+                </div>
+
+                <div class="example-card card">
+                    <div class="card-header bg-success text-white">
+                        <i class="fas fa-search me-2"></i>Grover搜索算法电路
+                    </div>
+                    <div class="card-body">
+                        <p>Grover算法提供了非结构化搜索问题的二次加速。</p>
+                        <div id="groverExample" class="q-circuit mb-3"></div>
+                        <button id="loadGrover" class="btn btn-success btn-sm"><i class="fas fa-download me-1"></i>加载此电路</button>
+                    </div>
+                </div>
+
+                <div class="example-card card">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-lock me-2"></i>量子隐形传态电路
+                    </div>
+                    <div class="card-body">
+                        <p>展示量子纠缠如何用于传输量子态而不实际传输物理粒子。</p>
+                        <div id="teleportExample" class="q-circuit mb-3"></div>
+                        <button id="loadTeleport" class="btn btn-info btn-sm"><i class="fas fa-download me-1"></i>加载此电路</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <i class="fas fa-question-circle me-2"></i>使用说明
+                    </div>
+                    <div class="card-body">
+                        <ol class="small">
+                            <li class="mb-2">从上方选择量子门</li>
+                            <li class="mb-2">点击量子位线添加量子门</li>
+                            <li class="mb-2">点击"运行电路"查看结果</li>
+                            <li class="mb-2">从右侧加载示例电路学习</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="py-4 bg-dark text-white">
+        <div class="container text-center">
+            <p class="small mb-0">© 2023 PhysicsSolution Hub 量子实验模块. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <!-- 脚本加载 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化量子电路
+            const circuit = new QuantumCircuit();
+            circuit.setCanvas("circuit");
+            circuit.setNIStyle();
+            
+            // 示例电路初始化
+            const qftExample = new QuantumCircuit();
+            qftExample.setCanvas("qftExample");
+            qftExample.setNIStyle();
+            
+            const groverExample = new QuantumCircuit();
+            groverExample.setCanvas("groverExample");
+            groverExample.setNIStyle();
+            
+            const teleportExample = new QuantumCircuit();
+            teleportExample.setCanvas("teleportExample");
+            teleportExample.setNIStyle();
+            
+            // 初始化3量子位电路
+            circuit.init(3);
+            
+            // 构建示例电路
+            // 量子傅里叶变换示例 (2量子位)
+            qftExample.init(2);
+            qftExample.addGate("h", 0, 0);
+            qftExample.addGate("cu1", 0, 1, { params: { lambda: "π/2" } });
+            qftExample.addGate("h", 1, 1);
+            qftExample.render();
+            
+            // Grover搜索算法示例 (3量子位)
+            groverExample.init(3);
+            // 初始化步骤
+            groverExample.addGate("h", 0, 0);
+            groverExample.addGate("h", 1, 1);
+            groverExample.addGate("h", 2, 2);
+            // Oracle (标记解 |11>)
+            groverExample.addGate("x", 0, 3);
+            groverExample.addGate("x", 1, 3);
+            groverExample.addGate("h", 2, 3);
+            groverExample.addGate("ccx", 0, 1, 2, 3);
+            groverExample.addGate("h", 2, 3);
+            groverExample.addGate("x", 0, 3);
+            groverExample.addGate("x", 1, 3);
+            // 扩散算子
+            groverExample.addGate("h", 0, 4);
+            groverExample.addGate("h", 1, 4);
+            groverExample.addGate("h", 2, 4);
+            groverExample.addGate("x", 0, 4);
+            groverExample.addGate("x", 1, 4);
+            groverExample.addGate("x", 2, 4);
+            groverExample.addGate("h", 2, 4);
+            groverExample.addGate("ccx", 0, 1, 2, 4);
+            groverExample.addGate("h", 2, 4);
+            groverExample.addGate("x", 0, 4);
+            groverExample.addGate("x", 1, 4);
+            groverExample.addGate("x", 2, 4);
+            groverExample.addGate("h", 0, 4);
+            groverExample.addGate("h", 1, 4);
+            groverExample.addGate("h", 2, 4);
+            groverExample.render();
+            
+            // 量子隐形传态示例 (3量子位)
+            teleportExample.init(3);
+            // 创建纠缠对
+            teleportExample.addGate("h", 1, 0);
+            teleportExample.addGate("cx", 1, 2, 0);
+            // Alice的操作
+            teleportExample.addGate("cx", 0, 1, 1);
+            teleportExample.addGate("h", 0, 1);
+            teleportExample.addGate("measure", 0, 2);
+            teleportExample.addGate("measure", 1, 2);
+            // Bob的操作
+            teleportExample.addGate("x", 2, 3, { classicalControl: 1 });
+            teleportExample.addGate("z", 2, 3, { classicalControl: 0 });
+            teleportExample.render();
+            
+            // 量子门按钮事件
+            document.querySelectorAll('.gate-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const gateType = this.getAttribute('data-gate');
+                    circuit.setGateType(gateType);
+                });
+            });
+            
+            // 添加量子位
+            document.getElementById('addQubit').addEventListener('click', function() {
+                const numQubits = circuit.getNumQubits();
+                if (numQubits < 5) {
+                    circuit.setNumQubits(numQubits + 1);
+                    circuit.render();
+                } else {
+                    alert("最多支持5个量子位");
+                }
+            });
+            
+            // 移除量子位
+            document.getElementById('removeQubit').addEventListener('click', function() {
+                const numQubits = circuit.getNumQubits();
+                if (numQubits > 1) {
+                    circuit.setNumQubits(numQubits - 1);
+                    circuit.render();
+                } else {
+                    alert("至少需要1个量子位");
+                }
+            });
+            
+            // 清空电路
+            document.getElementById('clearCircuit').addEventListener('click', function() {
+                circuit.clear();
+                circuit.render();
+                document.getElementById('matrixOutput').textContent = "请构建量子电路并点击\"运行电路\"按钮...";
+                document.getElementById('truthTableOutput').innerHTML = `
+                    <table class="truth-table">
+                        <tr>
+                            <th>输入</th>
+                            <th>输出</th>
+                            <th>概率</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3">请构建量子电路并点击"运行电路"按钮...</td>
+                        </tr>
+                    </table>
+                `;
+                document.getElementById('stateOutput').textContent = "请构建量子电路并点击\"运行电路\"按钮...";
+            });
+            
+            // 运行电路
+            document.getElementById('runCircuit').addEventListener('click', function() {
+                try {
+                    // 运行电路
+                    circuit.run();
+                    
+                    // 获取矩阵表示
+                    const matrix = circuit.getMatrix();
+                    let matrixStr = "";
+                    for (let i = 0; i < matrix.length; i++) {
+                        for (let j = 0; j < matrix[i].length; j++) {
+                            const re = matrix[i][j].re.toFixed(2);
+                            const im = matrix[i][j].im.toFixed(2);
+                            matrixStr += `(${re}${im >= 0 ? '+' : ''}${im}i)\t`;
+                        }
+                        matrixStr += "\n";
+                    }
+                    document.getElementById('matrixOutput').textContent = matrixStr;
+                    
+                    // 获取真值表
+                    const truthTable = circuit.getTruthTable();
+                    let truthTableHTML = `
+                        <table class="truth-table">
+                            <tr>
+                                <th>输入</th>
+                                <th>输出</th>
+                                <th>概率</th>
+                            </tr>
+                    `;
+                    
+                    truthTable.forEach(row => {
+                        truthTableHTML += `
+                            <tr>
+                                <td>${row.in}</td>
+                                <td>${row.out}</td>
+                                <td>${(row.probability * 100).toFixed(2)}%</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    truthTableHTML += "</table>";
+                    document.getElementById('truthTableOutput').innerHTML = truthTableHTML;
+                    
+                    // 获取量子态
+                    const state = circuit.getState();
+                    let stateStr = "";
+                    for (let i = 0; i < state.length; i++) {
+                        const amplitude = state[i].amp;
+                        const re = amplitude.re.toFixed(4);
+                        const im = amplitude.im.toFixed(4);
+                        stateStr += `|${i.toString(2).padStart(circuit.getNumQubits(), '0')}>: (${re}${im >= 0 ? '+' : ''}${im}i)\n`;
+                    }
+                    document.getElementById('stateOutput').textContent = stateStr;
+                    
+                } catch (error) {
+                    alert("运行电路时出错: " + error.message);
+                }
+            });
+            
+            // 加载示例电路
+            document.getElementById('loadQFT').addEventListener('click', function() {
+                circuit.clear();
+                circuit.setNumQubits(2);
+                circuit.addGate("h", 0, 0);
+                circuit.addGate("cu1", 0, 1, { params: { lambda: "π/2" } });
+                circuit.addGate("h", 1, 1);
+                circuit.render();
+            });
+            
+            document.getElementById('loadGrover').addEventListener('click', function() {
+                circuit.clear();
+                circuit.setNumQubits(3);
+                // 初始化步骤
+                circuit.addGate("h", 0, 0);
+                circuit.addGate("h", 1, 1);
+                circuit.addGate("h", 2, 2);
+                // Oracle (标记解 |11>)
+                circuit.addGate("x", 0, 3);
+                circuit.addGate("x", 1, 3);
+                circuit.addGate("h", 2, 3);
+                circuit.addGate("ccx", 0, 1, 2, 3);
+                circuit.addGate("h", 2, 3);
+                circuit.addGate("x", 0, 3);
+                circuit.addGate("x", 1, 3);
+                // 扩散算子
+                circuit.addGate("h", 0, 4);
+                circuit.addGate("h", 1, 4);
+                circuit.addGate("h", 2, 4);
+                circuit.addGate("x", 0, 4);
+                circuit.addGate("x", 1, 4);
+                circuit.addGate("x", 2, 4);
+                circuit.addGate("h", 2, 4);
+                circuit.addGate("ccx", 0, 1, 2, 4);
+                circuit.addGate("h", 2, 4);
+                circuit.addGate("x", 0, 4);
+                circuit.addGate("x", 1, 4);
+                circuit.addGate("x", 2, 4);
+                circuit.addGate("h", 0, 4);
+                circuit.addGate("h", 1, 4);
+                circuit.addGate("h", 2, 4);
+                circuit.render();
+            });
+            
+            document.getElementById('loadTeleport').addEventListener('click', function() {
+                circuit.clear();
+                circuit.setNumQubits(3);
+                // 创建纠缠对
+                circuit.addGate("h", 1, 0);
+                circuit.addGate("cx", 1, 2, 0);
+                // Alice的操作
+                circuit.addGate("cx", 0, 1, 1);
+                circuit.addGate("h", 0, 1);
+                circuit.addGate("measure", 0, 2);
+                circuit.addGate("measure", 1, 2);
+                // Bob的操作
+                circuit.addGate("x", 2, 3, { classicalControl: 1 });
+                circuit.addGate("z", 2, 3, { classicalControl: 0 });
+                circuit.render();
+            });
+        });
+    </script>
+</body>
+</html>

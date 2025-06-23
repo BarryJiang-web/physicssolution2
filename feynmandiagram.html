@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>费曼图解析 | PhysicsSolution Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        :root {
+            --physics-blue: #2b5fdc;
+            --physics-red: #d62d20;
+            --physics-green: #28a745;
+            --physics-purple: #6f42c1;
+            --feynman-color: #d62d20;
+        }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .feynman-header {
+            background: linear-gradient(135deg, #d62d20 0%, #ff6b6b 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+        .feynman-card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            background-color: white;
+        }
+        .feynman-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .gate-palette {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .gate-btn {
+            margin: 0.2rem;
+            min-width: 80px;
+        }
+        #feynman-canvas {
+            width: 100%;
+            min-height: 400px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        .amplitude-result {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--feynman-color);
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            border-radius: 5px;
+        }
+        .example-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 100%;
+        }
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid var(--feynman-color);
+        }
+        .particle-btn {
+            margin: 0.2rem;
+            min-width: 80px;
+            font-weight: 500;
+        }
+        .photon-btn { background-color: #3498db; color: white; }
+        .electron-btn { background-color: #e74c3c; color: white; }
+        .positron-btn { background-color: #e74c3c; color: white; }
+        .quark-btn { background-color: #9b59b6; color: white; }
+        .gluon-btn { background-color: #f39c12; color: white; }
+        .higgs-btn { background-color: #1abc9c; color: white; }
+        .vertex-btn { background-color: #34495e; color: white; }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-atom me-2"></i>PhysicsSolution Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="experiment.html"><i class="fas fa-flask me-1"></i> 交互实验</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <header class="feynman-header">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold mb-3 animate__animated animate__fadeIn">
+                <i class="fas fa-project-diagram me-2"></i>费曼图解析工具
+            </h1>
+            <p class="lead animate__animated animate__fadeIn animate__delay-1s">交互式构建费曼图，自动计算散射振幅，可视化粒子相互作用过程</p>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <div class="container mb-5">
+        <div class="row">
+            <!-- 左侧面板 -->
+            <div class="col-lg-8">
+                <!-- 粒子面板 -->
+                <div class="feynman-card">
+                    <div class="card-body">
+                        <h5><i class="fas fa-puzzle-piece me-2"></i>粒子选择</h5>
+                        <div class="d-flex flex-wrap mb-3">
+                            <button class="particle-btn photon-btn gate-btn" data-particle="photon">光子 (γ)</button>
+                            <button class="particle-btn electron-btn gate-btn" data-particle="electron">电子 (e⁻)</button>
+                            <button class="particle-btn positron-btn gate-btn" data-particle="positron">正电子 (e⁺)</button>
+                            <button class="particle-btn quark-btn gate-btn" data-particle="quark">夸克 (q)</button>
+                            <button class="particle-btn gluon-btn gate-btn" data-particle="gluon">胶子 (g)</button>
+                            <button class="particle-btn higgs-btn gate-btn" data-particle="higgs">希格斯 (H)</button>
+                            <button class="particle-btn vertex-btn gate-btn" data-particle="vertex">顶点</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 画布区 -->
+                <div class="feynman-card">
+                    <div class="card-body">
+                        <h5><i class="fas fa-pencil-alt me-2"></i>费曼图绘制</h5>
+                        <p class="text-muted small mb-3">点击选择粒子类型，然后在画布上拖动绘制费曼图</p>
+                        <canvas id="feynman-canvas"></canvas>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button id="clear-btn" class="btn btn-outline-danger"><i class="fas fa-trash me-1"></i> 清空画布</button>
+                            <button id="calculate-btn" class="btn btn-primary"><i class="fas fa-calculator me-1"></i> 计算振幅</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 计算结果 -->
+                <div class="feynman-card">
+                    <div class="card-body">
+                        <h5><i class="fas fa-square-root-alt me-2"></i>散射振幅</h5>
+                        <div id="amplitude-result" class="amplitude-result">
+                            <p class="text-muted mb-0">绘制费曼图后点击"计算振幅"按钮将显示结果</p>
+                        </div>
+                        <div id="amplitude-explanation" class="mt-3" style="display: none;">
+                            <h5><i class="fas fa-info-circle me-2"></i>解析说明</h5>
+                            <div id="explanation-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧面板 -->
+            <div class="col-lg-4">
+                <!-- 经典费曼图示例 -->
+                <div class="feynman-card">
+                    <div class="card-body">
+                        <h5><i class="fas fa-book me-2"></i>经典费曼图示例</h5>
+                        
+                        <div class="example-card card mt-3" data-example="compton">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-bolt me-2"></i>康普顿散射</h6>
+                                <div class="text-center my-3">
+                                    <img src="https://via.placeholder.com/200x100?text=Compton+Scattering" alt="康普顿散射" class="img-fluid rounded">
+                                </div>
+                                <p class="card-text small">光子与电子相互作用，描述X射线被电子散射的过程。</p>
+                                <button class="btn btn-sm btn-outline-primary">加载示例</button>
+                            </div>
+                        </div>
+                        
+                        <div class="example-card card mt-3" data-example="pair-production">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-atom me-2"></i>电子-正电子对产生</h6>
+                                <div class="text-center my-3">
+                                    <img src="https://via.placeholder.com/200x100?text=Pair+Production" alt="电子对产生" class="img-fluid rounded">
+                                </div>
+                                <p class="card-text small">高能光子转化为电子-正电子对的过程。</p>
+                                <button class="btn btn-sm btn-outline-primary">加载示例</button>
+                            </div>
+                        </div>
+                        
+                        <div class="example-card card mt-3" data-example="bhabha">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-exchange-alt me-2"></i>巴巴散射</h6>
+                                <div class="text-center my-3">
+                                    <img src="https://via.placeholder.com/200x100?text=Bhabha+Scattering" alt="巴巴散射" class="img-fluid rounded">
+                                </div>
+                                <p class="card-text small">电子与正电子弹性散射过程。</p>
+                                <button class="btn btn-sm btn-outline-primary">加载示例</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 使用说明 -->
+                <div class="feynman-card mt-4">
+                    <div class="card-body">
+                        <h5><i class="fas fa-question-circle me-2"></i>使用说明</h5>
+                        <ol class="small">
+                            <li class="mb-2">从上方选择粒子类型</li>
+                            <li class="mb-2">在画布上拖动绘制粒子线</li>
+                            <li class="mb-2">在交点处添加顶点</li>
+                            <li class="mb-2">点击"计算振幅"获取结果</li>
+                            <li class="mb-2">从右侧加载示例学习</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="py-4 bg-dark text-white">
+        <div class="container text-center">
+            <p class="small mb-0">© 2023 PhysicsSolution Hub 实验平台. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript 实现 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 画布初始化
+            const canvas = document.getElementById('feynman-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 设置画布实际尺寸
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * window.devicePixelRatio;
+                canvas.height = rect.height * window.devicePixelRatio;
+                canvas.style.width = rect.width + 'px';
+                canvas.style.height = rect.height + 'px';
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+                redrawCanvas();
+            }
+            
+            // 重绘画布
+            function redrawCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // 这里添加重绘逻辑
+            }
+            
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            
+            // 粒子选择
+            let selectedParticle = null;
+            document.querySelectorAll('.particle-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    selectedParticle = this.dataset.particle;
+                    document.querySelectorAll('.particle-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 画布交互
+            let isDrawing = false;
+            let startX, startY;
+            
+            canvas.addEventListener('mousedown', function(e) {
+                if (!selectedParticle) return;
+                
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                startX = (e.clientX - rect.left) / (rect.width / canvas.width);
+                startY = (e.clientY - rect.top) / (rect.height / canvas.height);
+                
+                // 绘制初始粒子
+                drawParticle(startX, startY, selectedParticle);
+            });
+            
+            canvas.addEventListener('mousemove', function(e) {
+                if (!isDrawing) return;
+                
+                const rect = canvas.getBoundingClientRect();
+                const endX = (e.clientX - rect.left) / (rect.width / canvas.width);
+                const endY = (e.clientY - rect.top) / (rect.height / canvas.height);
+                
+                // 清除临时线
+                redrawCanvas();
+                
+                // 绘制临时线
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = getParticleColor(selectedParticle);
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 3]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            });
+            
+            canvas.addEventListener('mouseup', function(e) {
+                if (!isDrawing) return;
+                isDrawing = false;
+                
+                const rect = canvas.getBoundingClientRect();
+                const endX = (e.clientX - rect.left) / (rect.width / canvas.width);
+                const endY = (e.clientY - rect.top) / (rect.height / canvas.height);
+                
+                // 绘制最终粒子线
+                drawParticleLine(startX, startY, endX, endY, selectedParticle);
+                
+                // 如果是顶点，绘制顶点
+                if (selectedParticle === 'vertex') {
+                    drawVertex(endX, endY);
+                } else {
+                    drawParticle(endX, endY, selectedParticle);
+                }
+            });
+            
+            // 绘制粒子函数
+            function drawParticle(x, y, type) {
+                ctx.beginPath();
+                ctx.fillStyle = getParticleColor(type);
+                
+                switch(type) {
+                    case 'photon':
+                        // 绘制波浪线表示光子
+                        drawWavyLine(x, y, x, y, 5);
+                        break;
+                    case 'electron':
+                    case 'positron':
+                        // 绘制带箭头直线
+                        ctx.font = '12px Arial';
+                        ctx.fillText(type === 'electron' ? 'e⁻' : 'e⁺', x + 5, y - 5);
+                        break;
+                    case 'quark':
+                        ctx.font = '12px Arial';
+                        ctx.fillText('q', x + 5, y - 5);
+                        break;
+                    case 'gluon':
+                        // 绘制螺旋线表示胶子
+                        drawCurlyLine(x, y, x, y, 5);
+                        break;
+                    case 'higgs':
+                        ctx.font = '12px Arial';
+                        ctx.fillText('H', x + 5, y - 5);
+                        break;
+                }
+            }
+            
+            // 绘制粒子线
+            function drawParticleLine(x1, y1, x2, y2, type) {
+                ctx.beginPath();
+                ctx.strokeStyle = getParticleColor(type);
+                ctx.lineWidth = 2;
+                
+                switch(type) {
+                    case 'photon':
+                        drawWavyLine(x1, y1, x2, y2, 10);
+                        break;
+                    case 'gluon':
+                        drawCurlyLine(x1, y1, x2, y2, 10);
+                        break;
+                    default:
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                        
+                        // 添加箭头
+                        if (type !== 'vertex') {
+                            drawArrow(x2, y2, Math.atan2(y2 - y1, x2 - x1));
+                        }
+                        break;
+                }
+            }
+            
+            // 绘制顶点
+            function drawVertex(x, y) {
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#000';
+                ctx.fill();
+            }
+            
+            // 辅助绘图函数
+            function drawWavyLine(x1, y1, x2, y2, wavelength) {
+                // 简化的波浪线实现
+                const dx = x2 - x1;
+                const dy = y2 - y1;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const steps = distance / wavelength;
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                
+                for (let i = 0; i <= steps; i++) {
+                    const x = x1 + (dx * i / steps);
+                    const y = y1 + (dy * i / steps) + Math.sin(i * 2) * 5;
+                    ctx.lineTo(x, y);
+                }
+                
+                ctx.stroke();
+            }
+            
+            function drawCurlyLine(x1, y1, x2, y2, loopSize) {
+                // 简化的螺旋线实现
+                const dx = x2 - x1;
+                const dy = y2 - y1;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const steps = distance / loopSize;
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                
+                for (let i = 0; i <= steps; i++) {
+                    const x = x1 + (dx * i / steps);
+                    const y = y1 + (dy * i / steps) + Math.sin(i * Math.PI) * 5;
+                    ctx.lineTo(x, y);
+                }
+                
+                ctx.stroke();
+            }
+            
+            function drawArrow(x, y, angle) {
+                const length = 10;
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(-length, -length/2);
+                ctx.moveTo(0, 0);
+                ctx.lineTo(-length, length/2);
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+            
+            function getParticleColor(type) {
+                const colors = {
+                    'photon': '#3498db',
+                    'electron': '#e74c3c',
+                    'positron': '#e74c3c',
+                    'quark': '#9b59b6',
+                    'gluon': '#f39c12',
+                    'higgs': '#1abc9c',
+                    'vertex': '#34495e'
+                };
+                return colors[type] || '#000';
+            }
+            
+            // 清空画布
+            document.getElementById('clear-btn').addEventListener('click', function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                document.getElementById('amplitude-result').innerHTML = 
+                    '<p class="text-muted mb-0">绘制费曼图后点击"计算振幅"按钮将显示结果</p>';
+                document.getElementById('amplitude-explanation').style.display = 'none';
+            });
+            
+            // 计算振幅
+            document.getElementById('calculate-btn').addEventListener('click', function() {
+                // 这里实现费曼图解析和振幅计算
+                // 示例结果
+                const amplitudeResult = document.getElementById('amplitude-result');
+                const explanationDiv = document.getElementById('amplitude-explanation');
+                const explanationContent = document.getElementById('explanation-content');
+                
+                amplitudeResult.innerHTML = `
+                    <h5>计算结果</h5>
+                    <p>散射振幅: $\mathcal{M} = -ie^2 \gamma^\mu \frac{1}{\not{p} - m} \gamma^\nu \epsilon_\mu \epsilon_\nu$</p>
+                    <p>散射截面: $\sigma = \frac{e^4}{64\pi^2 E^2}$</p>
+                `;
+                
+                explanationContent.innerHTML = `
+                    <p>这是量子电动力学(QED)中典型的电子-光子散射过程的散射振幅。其中:</p>
+                    <ul>
+                        <li>$e$ 是电子电荷</li>
+                        <li>$\gamma^\mu$ 是狄拉克矩阵</li>
+                        <li>$\not{p} = \gamma^\mu p_\mu$ 是费曼斜线标记</li>
+                        <li>$\epsilon_\mu$ 是光子极化矢量</li>
+                    </ul>
+                    <p>这个结果对应于树图阶的费曼图计算，包含了电子传播子和两个QED顶点。</p>
+                `;
+                
+                explanationDiv.style.display = 'block';
+                
+                // 重新渲染MathJax
+                if (typeof MathJax !== 'undefined') {
+                    MathJax.typeset();
+                }
+            });
+            
+            // 加载示例
+            document.querySelectorAll('.example-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const example = this.dataset.example;
+                    loadExample(example);
+                });
+            });
+            
+            function loadExample(example) {
+                // 清空画布
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 根据示例绘制费曼图
+                switch(example) {
+                    case 'compton':
+                        drawComptonScattering();
+                        break;
+                    case 'pair-production':
+                        drawPairProduction();
+                        break;
+                    case 'bhabha':
+                        drawBhabhaScattering();
+                        break;
+                }
+                
+                // 自动计算振幅
+                document.getElementById('calculate-btn').click();
+            }
+            
+            function drawComptonScattering() {
+                const centerX = canvas.width / 2 / window.devicePixelRatio;
+                const centerY = canvas.height / 2 / window.devicePixelRatio;
+                const length = 100;
+                
+                // 入射光子
+                drawParticleLine(centerX - length, centerY, centerX, centerY, 'photon');
+                drawParticle(centerX - length, centerY, 'photon');
+                
+                // 入射电子
+                drawParticleLine(centerX, centerY + length, centerX, centerY, 'electron');
+                drawParticle(centerX, centerY + length, 'electron');
+                
+                // 顶点
+                drawVertex(centerX, centerY);
+                
+                // 出射光子
+                drawParticleLine(centerX, centerY, centerX + length, centerY - length, 'photon');
+                drawParticle(centerX + length, centerY - length, 'photon');
+                
+                // 出射电子
+                drawParticleLine(centerX, centerY, centerX - length, centerY - length, 'electron');
+                drawParticle(centerX - length, centerY - length, 'electron');
+            }
+            
+            function drawPairProduction() {
+                const centerX = canvas.width / 2 / window.devicePixelRatio;
+                const centerY = canvas.height / 2 / window.devicePixelRatio;
+                const length = 100;
+                
+                // 入射光子
+                drawParticleLine(centerX - length, centerY, centerX, centerY, 'photon');
+                drawParticle(centerX - length, centerY, 'photon');
+                
+                // 顶点
+                drawVertex(centerX, centerY);
+                
+                // 产生的电子
+                drawParticleLine(centerX, centerY, centerX + length, centerY - length, 'electron');
+                drawParticle(centerX + length, centerY - length, 'electron');
+                
+                // 产生的正电子
+                drawParticleLine(centerX, centerY, centerX + length, centerY + length, 'positron');
+                drawParticle(centerX + length, centerY + length, 'positron');
+            }
+            
+            function drawBhabhaScattering() {
+                const centerX = canvas.width / 2 / window.devicePixelRatio;
+                const centerY = canvas.height / 2 / window.devicePixelRatio;
+                const length = 100;
+                
+                // 入射电子
+                drawParticleLine(centerX - length, centerY - length, centerX, centerY, 'electron');
+                drawParticle(centerX - length, centerY - length, 'electron');
+                
+                // 入射正电子
+                drawParticleLine(centerX - length, centerY + length, centerX, centerY, 'positron');
+                drawParticle(centerX - length, centerY + length, 'positron');
+                
+                // 顶点
+                drawVertex(centerX, centerY);
+                
+                // 出射电子
+                drawParticleLine(centerX, centerY, centerX + length, centerY - length, 'electron');
+                drawParticle(centerX + length, centerY - length, 'electron');
+                
+                // 出射正电子
+                drawParticleLine(centerX, centerY, centerX + length, centerY + length, 'positron');
+                drawParticle(centerX + length, centerY + length, 'positron');
+            }
+        });
+    </script>
+</body>
+</html>
